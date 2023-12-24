@@ -1,0 +1,100 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  //provider = "postgresql"
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
+}
+
+model Issue {
+  id               Int      @id @default(autoincrement())
+  title            String   @db.VarChar(255)
+  description      String   @db.Text
+  status           Status   @default(OPEN)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  assignedToUserId String?  @db.VarChar(255)
+  assignedToUser   User?    @relation(fields: [assignedToUserId], references: [id])
+}
+
+enum Status {
+  OPEN
+  IN_PROGRESS
+  CLOSED
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model User {
+  id             String    @id @default(cuid())
+  name           String?
+  email          String?   @unique
+  emailVerified  DateTime?
+  image          String?
+  accounts       Account[]
+  sessions       Session[]
+  assignedIssues Issue[]
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+// INSERT INTO public."Issue" (
+// title, description, status, "createdAt", "updatedAt",  "assignedToUserId") VALUES
+
+// ('Database Connection Error', 'Unable to establish connection to the database server.', 'OPEN', '2023-01-15 08:30:00', '2023-01-15 08:30:00', NULL),
+// ('Frontend UI Alignment Issue', 'Issues with misalignment of elements on the homepage.', 'IN_PROGRESS', '2023-02-20 10:45:00', '2023-02-20 10:45:00', NULL),
+// ('Server Timeout Problem', 'Users experiencing timeouts during heavy traffic hours.', 'CLOSED', '2023-03-10 14:20:00', '2023-03-10 14:20:00', NULL),
+// ('Login Authentication Failure', 'Users unable to log in due to authentication errors.', 'OPEN', '2023-04-05 11:00:00', '2023-04-05 11:00:00', NULL),
+// ('Performance Degradation in API', 'API responses are slower than usual.', 'IN_PROGRESS', '2023-05-18 09:15:00', '2023-05-18 09:15:00', NULL),
+// ('Missing CSS Styles', 'Certain pages are missing CSS styles.', 'OPEN', '2023-06-22 13:40:00', '2023-06-22 13:40:00', NULL),
+// ('Data Integrity Check Failure', 'Inconsistencies found in the database.', 'CLOSED', '2023-07-07 10:10:00', '2023-07-07 10:10:00', NULL),
+// ('Bug in Shopping Cart', 'Items not being added to the shopping cart.', 'IN_PROGRESS', '2023-08-12 12:25:00', '2023-08-12 12:25:00', NULL),
+// ('Email Notification Issue', 'Users not receiving email notifications.', 'CLOSED', '2023-09-30 15:55:00', '2023-09-30 15:55:00', NULL),
+// ('Mobile App Crashing', 'App crashes frequently on Android devices.', 'OPEN', '2023-10-25 09:50:00', '2023-10-25 09:50:00', NULL),
+// ('Incorrect Billing Calculation', 'Billing amounts are calculated incorrectly.', 'IN_PROGRESS', '2023-11-08 11:35:00', '2023-11-08 11:35:00', NULL),
+// ('404 Error on Help Page', 'Help page showing a 404 error.', 'OPEN', '2023-12-19 14:45:00', '2023-12-19 14:45:00', NULL),
+// ('Slow Page Load Times', 'Pages taking longer than usual to load.', 'CLOSED', '2024-01-21 12:20:00', '2024-01-21 12:20:00', NULL),
+// ('File Upload Error', 'Users unable to upload files.', 'IN_PROGRESS', '2024-02-28 09:30:00', '2024-02-28 09:30:00', NULL),
+// ('Broken Link in FAQ Section', 'Link in the FAQ section leads to a broken page.', 'OPEN', '2024-03-14 11:55:00', '2024-03-14 11:55:00', NULL),
+// ('Browser Compatibility Issue', 'Website not displaying properly in certain browsers.', 'CLOSED', '2024-04-09 14:10:00', '2024-04-09 14:10:00', NULL),
+// ('Unresponsive Website Sections', 'Certain sections of the website are unresponsive.', 'OPEN', '2024-05-17 10:05:00', '2024-05-17 10:05:00', NULL),
+// ('Incorrect Order Confirmation', 'Confirmation email does not reflect the correct order details.', 'IN_PROGRESS', '2024-06-20 13:25:00', '2024-06-20 13:25:00', NULL),
+// ('Search Functionality Not Working', 'Users unable to find products using the search feature.', 'CLOSED', '2024-07-30 12:40:00', '2024-07-30 12:40:00', NULL),
+// ('Missing Product Images', 'Images for certain products are missing on the website.', 'OPEN', '2024-08-22 09:15:00', '2024-08-22 09:15:00', NULL);
