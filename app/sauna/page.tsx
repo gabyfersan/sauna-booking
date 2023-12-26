@@ -5,8 +5,15 @@ const bookinHours = [];
 const getAllBookinHours = (index: number) => {
   const allBookinHours = [];
   console.log(getAll(index - 1));
-  for (let i = 1; i < 25; i++) {
-    allBookinHours.push(i === 1 ? { label: getAll(index - 1) } : {});
+  for (let i = 1; i <= 25; i++) {
+    allBookinHours.push(
+      i === 1
+        ? { label: getAll(index - 1).dateFormated }
+        : {
+            label: getAll(index - 1).dateNumerical + getAllHours()[i - 1],
+            timeDate: getAll(index - 1).dateNumerical + getAllHours()[i - 1],
+          }
+    );
   }
   return allBookinHours;
 };
@@ -27,7 +34,7 @@ const getAll = (addNumbersOfDays: number) => {
   let date = new Date();
   date.setDate(date.getDate() + addNumbersOfDays);
 
-  return new Intl.DateTimeFormat("sv-SE", {
+  const dateFormated = new Intl.DateTimeFormat("sv-SE", {
     weekday: "long",
     year: "numeric",
     month: "short",
@@ -36,6 +43,10 @@ const getAll = (addNumbersOfDays: number) => {
     .format(date)
     .split(" ");
 
+  date.setDate(date.getDate());
+  //date.toISOString().slice(0, 11);
+  const dateNumerical = date.toISOString().slice(0, 11);
+  return { dateFormated, dateNumerical };
   // const options = {
   //   weekday: "long",
   //   year: "numeric",
@@ -48,7 +59,7 @@ const getAll = (addNumbersOfDays: number) => {
 };
 
 const getAllHours = () => {
-  const hours = [];
+  const hours = [""];
   const currentDate = new Date();
   currentDate.setHours(0);
   currentDate.setMinutes(0);
@@ -60,38 +71,37 @@ const getAllHours = () => {
   return hours;
 };
 
-let div = {
+let base = {
   height: "5em",
-  width: "5em",
   border: "2px solid #ffa94d",
   "border-radius": "5px",
-  "background-color": "#ffd8a8",
   color: "#d9480f",
   "text-align": "center",
+};
+
+let styleForTime = {
+  ...base,
+  width: "4.5em",
+  "background-color": "#ffd8a8",
   margin: "2px 2px 2px 0",
   overflow: "clip",
 };
 
-let div2 = {
-  height: "5em",
-  width: "7em",
-  border: "2px solid #ffa94d",
-  "border-radius": "5px",
+let styleForBooking = {
+  ...base,
+  width: "6em",
   "background-color": "green",
-  color: "#d9480f",
-  "text-align": "center",
   margin: "2px",
   //"z-index": "-1",
 };
 
-let g = {
+let styleForGrid = {
   "grid-template-columns":
     "1fr 1fr 1fr 1fr  1fr  1fr  1fr 1fr 1fr  1fr  1fr  1fr",
   //  "position": "fixed"
   //contain: "paint",
   height: "600px",
   width: "100%",
-  "white-space": "nowrap",
   overflow: "auto",
 };
 
@@ -99,30 +109,36 @@ const Sauna = () => {
   const allHours = getAllHours();
   console.log();
   return (
-    <Grid style={g}>
+    <Grid style={styleForGrid}>
       <Flex
         direction='column'
         // gap='0'
         className=' sticky left-0 z-10 bg-white'
       >
-        {allHours.map((a) => (
-          <div
-            key={a}
-            style={div}
-            className={`flex items-center justify-center sticky left-0`}
-          >
-            <Text size='6'>{a}</Text>
-          </div>
-        ))}
+        {allHours.map((a, i) =>
+          i === 0 ? (
+            <div
+              style={{ width: "4.5em", height: "5em", margin: "2px 2px 2px 0" }}
+            ></div>
+          ) : (
+            <div
+              key={a}
+              style={styleForTime}
+              className={`flex items-center justify-center sticky left-0`}
+            >
+              <Text size='6'>{a}</Text>
+            </div>
+          )
+        )}
       </Flex>
       {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((i) => (
         <Flex direction='column' key={i}>
           {getAllBookinHours(i).map((a, ii) => (
             <div
               key={Array.isArray(a.label) ? a.label[1] : a.label}
-              style={div2}
+              style={styleForBooking}
               className={`flex items-center justify-center   	flex-col ${
-                a.label ? " !bg-white sticky top-0" : ""
+                ii === 0 ? " !bg-white sticky top-0" : ""
               }`}
             >
               {ii === 0 ? (
@@ -134,7 +150,7 @@ const Sauna = () => {
                   <Text size='3'> {a?.label![1] + " " + a?.label![2]}</Text>
                 </>
               ) : (
-                a.label
+                <Text size='1'>{a.label}</Text>
               )}
               <Text size='6'></Text>
             </div>
