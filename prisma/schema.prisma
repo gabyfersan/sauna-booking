@@ -12,6 +12,17 @@ datasource db {
   relationMode = "prisma"
 }
 
+model Sauna {
+  id                  Int      @id @default(autoincrement())
+  bookedAtDateAndTime DateTime @db.Timestamp() @unique
+  message             String?  @db.VarChar(255)
+  shareSauna          Boolean  @default(false)
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+  bookedByUserId      String   @db.VarChar(255)
+  bookedByUser        User     @relation(fields: [bookedByUserId], references: [id])
+}
+
 model Issue {
   id               Int      @id @default(autoincrement())
   title            String   @db.VarChar(255)
@@ -65,6 +76,7 @@ model User {
   accounts       Account[]
   sessions       Session[]
   assignedIssues Issue[]
+  Sauna          Sauna[]
 }
 
 model VerificationToken {
