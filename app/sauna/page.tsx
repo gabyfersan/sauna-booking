@@ -23,19 +23,6 @@ const getDateFormated = (index: number): { date: string[] } => {
 };
 
 const getAll = (addNumbersOfDays: number) => {
-  //.toISOString().slice(0, 10);
-  //   const dateNow = new Date();
-  //   dateNow.setDate(dateNow.getDate() + addNumbersOfDays);
-
-  //   //let time = new Date();
-  // const options = {
-  //   weekday: "long",
-  //   year: "numeric",
-  //   month: "long",
-  //   day: "numeric",
-  // };
-  // dateNow.toLocaleTimeString('sv-SE', options).split(" ");
-
   let date = new Date();
   date.setDate(date.getDate() + addNumbersOfDays);
 
@@ -49,23 +36,12 @@ const getAll = (addNumbersOfDays: number) => {
     .split(" ");
 
   date.setDate(date.getDate());
-  //date.toISOString().slice(0, 11);
-  //const dateNumerical = date.toISOString().slice(0, 11);
   const dateNumerical = new Intl.DateTimeFormat("sv-SE", {
     year: "numeric",
     month: "numeric",
     day: "numeric",
   }).format(date);
   return { dateFormated, dateNumerical };
-  // const options = {
-  //   weekday: "long",
-  //   year: "numeric",
-  //   month: "short",
-  //   day: "numeric",
-  // };
-  // return date.toLocaleTimeString("sv-SE", options).split(" ");
-
-  //return date.toISOString().slice(0, 10);
 };
 
 const getAllHours = () => {
@@ -89,37 +65,9 @@ const moveToClosetsHour = (time: string) => {
   return newTime.setHours(newTime.getHours() + 1);
 };
 
-let base = {
-  //border: "2px solid #ffa94d",
-  //"border-radius": "5px",
-  //color: "#d9480f",
-  //"text-align": "center",
-  //"box-sizing": "border-box;",
-};
-
-let styleForTime = {
-  "background-color": "#ffd8a8",
-  ...base,
-  width: "4.5em",
-  height: "3em",
-  //"background-color": "#ffd8a8",
-  margin: "2px 2px 2px 0",
-  overflow: "clip",
-};
-
-let styleForBooking = {
-  ...base,
-  //width: "6em",
-  //height: "4.2em",
-  //"background-color": "green",
-  margin: "2px",
-  //"z-index": "-1",
-};
 
 let styleForGrid = {
   gridTemplateColumns: "1fr 1fr 1fr 1fr  1fr  1fr  1fr 1fr 1fr  1fr  1fr  1fr",
-  //  "position": "fixed"
-  //contain: "paint",
   height: "500px",
   width: "100%",
   overflow: "auto",
@@ -146,12 +94,10 @@ const Sauna = () => {
     //     "px";
     // }
   }, []);
-  //const allHours = getAllHours();
-  //console.log(allHours);
+ 
   let getAllBookinHoursDayAndI: { date: string }[];
   return (
     <>
-      {" "}
       <AlertDialog.Root open={showDialog}>
         <AlertDialog.Content>
           <AlertDialog.Title>Error</AlertDialog.Title>
@@ -171,7 +117,6 @@ const Sauna = () => {
       <Grid style={styleForGrid} id='grid'>
         <Flex
           direction='column'
-          // gap='0'
           className=' sticky left-0  bg-white'
           style={{
             zIndex: 10,
@@ -201,7 +146,7 @@ const Sauna = () => {
                 }}
                 className={`flex items-center justify-center sticky left-0 `}
               >
-                <Text size='6'>{a}</Text>
+                <Text size='4'>{a}</Text>
               </div>
             )
           )}
@@ -223,11 +168,10 @@ const Sauna = () => {
                     }}
                     className={`flex items-center justify-center flex-col sticky top-0  `}
                   >
-                    <Text size='3' className='block'>
+                    <Text size='4' className='block'>
                       {getDateFormated(day).date[0]}
                     </Text>
-                    <Text size='3'>
-                      {" "}
+                    <Text size='4'>
                       {getDateFormated(day).date[1] +
                         " " +
                         getDateFormated(day).date[2]}
@@ -235,8 +179,6 @@ const Sauna = () => {
                   </div>
                 ) : (
                   <Button
-                    data-te-ripple-init
-                    data-te-ripple-unbound='true'
                     color='lime'
                     variant='classic'
                     size='4'
@@ -248,11 +190,11 @@ const Sauna = () => {
                     key={getAllBookinHoursDayAndI[i].date}
                     style={{
                       margin: "2px 2px 2px 2px",
-                      // zIndex: -2,
+          
                     }}
-                    className={`flex items-center justify-center flex-col active:bg-lime-100`}
+                    className={`flex items-center justify-center active:bg-lime-100`}
                   >
-                    <Text size='2'>{getAllBookinHoursDayAndI[i].date}</Text>
+                    <Text size='4'>{getAllBookinHoursDayAndI[i].date}</Text>
                   </Button>
                 )
               )}
