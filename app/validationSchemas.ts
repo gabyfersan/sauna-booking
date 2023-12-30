@@ -9,11 +9,8 @@ export const patchSaunaSchema = z.object({
     .min(0)
     .max(255, "Längden ska vara max vara 65535 tecken")
     .optional(),
+
   shareSauna: z.boolean().optional(),
-  bookedByUserId: z
-  .string()
-  .min(1, "Längden ska vara minst vara 1 tecken")
-  .max(255, "Längden ska vara max vara 255 tecken"),
 });
 
 export const saunaSchema = z.object({

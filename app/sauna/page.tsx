@@ -1,7 +1,13 @@
 "use client";
 import { AlertDialog, Button, Flex, Grid, Text } from "@radix-ui/themes";
+import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
+import SaunaFormSkeleton from "./_components/SaunaFormSkeleton";
 
+const SaunaForm = dynamic(() => import("@/app/sauna/_components/SaunaForm"), {
+  ssr: false,
+  loading: () => <SaunaFormSkeleton />,
+});
 const bookinHours = [];
 
 const getAllBookinHours = (index: number): { date: string }[] => {
@@ -65,7 +71,6 @@ const moveToClosetsHour = (time: string) => {
   return newTime.setHours(newTime.getHours() + 1);
 };
 
-
 let styleForGrid = {
   gridTemplateColumns: "1fr 1fr 1fr 1fr  1fr  1fr  1fr 1fr 1fr  1fr  1fr  1fr",
   height: "500px",
@@ -77,9 +82,11 @@ const Sauna = () => {
   const bookSauna = (e: any) => {
     console.log(e.target);
     console.log(e.target.dataset.dateAndTime);
+    setDateAndTime(e.target.parentElement.dataset.dateAndTime);
     setShowDialog(true);
   };
   const [showDialog, setShowDialog] = useState(false);
+  const [dateAndTime, setDateAndTime] = useState<string>("");
   useEffect(() => {
     // if (
     //   document &&
@@ -94,7 +101,7 @@ const Sauna = () => {
     //     "px";
     // }
   }, []);
- 
+
   let getAllBookinHoursDayAndI: { date: string }[];
   return (
     <>
@@ -104,6 +111,7 @@ const Sauna = () => {
           <AlertDialog.Description>
             This issue could not be deleted.
           </AlertDialog.Description>
+          <SaunaForm dateAndTime={dateAndTime} />
           <Button
             color='gray'
             variant='soft'
@@ -190,7 +198,6 @@ const Sauna = () => {
                     key={getAllBookinHoursDayAndI[i].date}
                     style={{
                       margin: "2px 2px 2px 2px",
-          
                     }}
                     className={`flex items-center justify-center active:bg-lime-100`}
                   >
