@@ -8,18 +8,15 @@ import { Toaster } from "react-hot-toast";
 import { z } from "zod";
 import { saunaDateBaseSchema, saunaSchema } from "../validationSchemas";
 import SaunaFormSkeleton from "./_components/SaunaFormSkeleton";
+import {
+  getAllHours,
+  getAllDays,
+  moveToClosetsHour,
+} from "./_components/helperFunctions";
 type SaunaDateBaseType = z.infer<typeof saunaDateBaseSchema>;
-const getCurrentDateAndTime = () => {
-  const date = new Date();
-  return new Intl.DateTimeFormat("sv-SE", {
-    year: "numeric",
-    month: "numeric",
-    day: "numeric",
-    hour: "numeric",
-    minute: "numeric",
-    second: "numeric",
-  }).format(date);
-};
+const extendedSaunaSchema = saunaSchema.merge(z.object({ id: z.number() }));
+type SaunaFormData = z.infer<typeof extendedSaunaSchema>;
+
 
 const SaunaForm = dynamic(() => import("@/app/sauna/_components/SaunaForm"), {
   ssr: false,
@@ -27,65 +24,11 @@ const SaunaForm = dynamic(() => import("@/app/sauna/_components/SaunaForm"), {
 });
 const bookinHours = [];
 
-const getAllBookinHours = (index: number): { date: string }[] => {
-  const allBookinHours = [];
-  const all = getAll(index);
-  console.log("kkkk");
-  for (let i = 1; i <= 25; i++) {
-    allBookinHours.push({
-      date: all.dateNumerical + "T" + allHours[i - 1] + ":00.000Z",
-    });
-  }
-  return allBookinHours;
-};
-
-const getDateFormated = (index: number): { date: string[] } => {
-  return {
-    date: getAll(index).dateFormated,
-  };
-};
-
-const getAll = (addNumbersOfDays: number) => {
-  let date = new Date();
-  date.setDate(date.getDate() + addNumbersOfDays);
-
-  const dateFormated = new Intl.DateTimeFormat("sv-SE", {
-    weekday: "long",
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  })
-    .format(date)
-    .split(" ");
-
-  date.setDate(date.getDate());
-  const dateNumerical = new Intl.DateTimeFormat("sv-SE", {
-    year: "numeric",
-    month: "numeric",
-    day: "numeric",
-  }).format(date);
-  return { dateFormated, dateNumerical };
-};
-
-const getAllHours = () => {
-  const hours = [""];
-  const currentDate = new Date();
-  currentDate.setHours(0);
-  currentDate.setMinutes(0);
-
-  for (let i = 1; i < 25; i++) {
-    currentDate.setHours(currentDate.getHours() + 1);
-    hours.push(currentDate.toISOString().slice(11, 16));
-  }
-  return hours;
-};
-
 const allHours = getAllHours();
-
-const moveToClosetsHour = (time: string) => {
-  const newTime = new Date(time.slice(0, -1));
-
-  return newTime.setHours(newTime.getHours() + 1);
+const allDays = getAllDays(10);
+const getDayAndTime = (day: number, time: number) => {
+  //console.log("getDayAndTime");
+  return allDays[day].dateNumerical + "T" + allHours[time] + ":00.000Z";
 };
 
 let styleForGrid = {
@@ -94,12 +37,9 @@ let styleForGrid = {
   width: "100%",
   overflow: "auto",
 };
-const extendedSaunaSchema = saunaSchema.merge(z.object({ id: z.number() }));
 
-type SaunaFormData = z.infer<typeof extendedSaunaSchema>;
 const Sauna = () => {
   console.log("repaint");
-  //let saunaBooking
   const isTimeBooked = (dateAndTime: string) => {
     return transformedSaunaBooking && transformedSaunaBooking[dateAndTime];
   };
@@ -137,7 +77,7 @@ const Sauna = () => {
     },
     {}
   );
-  console.log(transformedSaunaBooking);
+  
   const bookSauna = (e: any) => {
     const dateAndTime =
       e.target.dataset.dateAndTime ||
@@ -150,10 +90,7 @@ const Sauna = () => {
   };
   const [showDialog, setShowDialog] = useState(false);
   const [dateAndTime, setDateAndTime] = useState<string>("");
-  // const elementToScrollTo = useRef(null);
-  // const refobject: { [key: string]: MutableRefObject<null> } = {
-  //   "2024-01-02T12:00:00.000Z": elementToScrollTo,
-  // };
+
   useEffect(() => {
     const gridElement = document.getElementById("grid");
 
@@ -161,28 +98,11 @@ const Sauna = () => {
       gridElement.style.height =
         innerHeight - gridElement.getBoundingClientRect().top - 30 + "px";
     }
-    // if (
-    //   document &&
-    //   document.getElementById("grid") &&
-    //   document.getElementById("grid").style &&
-    //   document.getElementById("grid").style.height
-    // ) {
-    //   document.getElementById("grid").style.height =
-    //     innerHeight -
-    //     document.getElementById("grid").getBoundingClientRect().top -
-    //     30 +
-    //     "px";
-    // }
 
     const element = document.getElementById("scroll-into-view");
     element && element.scrollIntoView({ behavior: "smooth", block: "center" });
-    // window.scrollTo({
-    //   top: elementToScrollTo.current ? elementToScrollTo.current.offsetTop : 0,
-    //   behavior: "smooth",
-    // })
   }, []);
 
-  let getAllBookinHoursDayAndI: { date: string }[];
   return (
     <>
       <Toaster />
@@ -251,24 +171,14 @@ const Sauna = () => {
           )}
         </Flex>
         {Array.from(Array(10).keys()).map((day) => {
-          getAllBookinHoursDayAndI = getAllBookinHours(day);
           return (
             <Flex direction='column' key={day} onClick={bookSauna}>
               {Array.from(Array(25).keys()).map((i) => {
-                // const timeDiff =
-                //   new Date().getTime() -
-                //   new Date(getAllBookinHoursDayAndI[i].date).getTime();
-                // const refProp =
-                //   timeDiff / 60000 < 60 && timeDiff > 0
-                //     ? { ref: elementToScrollTo }
-                //     : {};
-
                 return i === 0 ? (
                   <div
-                    key={getDateFormated(day).date[1]}
+                    key={allDays[day].dateFormated[0]}
                     style={{
                       margin: "2px",
-                      // borderRadius: "5px",
                       backgroundColor: "#ffd8a8",
                       opacity: 1,
                       zIndex: 1,
@@ -276,40 +186,32 @@ const Sauna = () => {
                     className={`flex items-center justify-center flex-col sticky top-0  `}
                   >
                     <Text size='3' className='block'>
-                      {getDateFormated(day).date[0]}
+                      {allDays[day].dateFormated[0]}
                     </Text>
                     <Text size='3'>
-                      {getDateFormated(day).date[1] +
+                      {allDays[day].dateFormated[1] +
                         " " +
-                        getDateFormated(day).date[2]}
+                        allDays[day].dateFormated[2]}
                     </Text>
                   </div>
                 ) : (
                   <Button
-                    color={
-                      // transformedSaunaBooking &&
-                      // transformedSaunaBooking[getAllBookinHoursDayAndI[i].date]
-                      //   ? "red"
-                      //   : "lime"
-                      colorOfButton(getAllBookinHoursDayAndI[i].date)
-                    }
+                    color={colorOfButton(getDayAndTime(day, i))}
                     variant='classic'
                     size='4'
                     disabled={
                       new Date().getTime() >
-                      moveToClosetsHour(getAllBookinHoursDayAndI[i].date)
+                      moveToClosetsHour(getDayAndTime(day, i))
                     }
-                    data-date-and-time={getAllBookinHoursDayAndI[i].date}
-                    key={getAllBookinHoursDayAndI[i].date}
+                    data-date-and-time={getDayAndTime(day, i)}
+                    key={getDayAndTime(day, i)}
                     style={{
                       margin: "2px 2px 2px 2px",
                     }}
                     className={`flex items-center justify-center active:bg-lime-100`}
                   >
                     <Text size='4'>
-                      {isTimeBooked(getAllBookinHoursDayAndI[i].date)
-                        ? "Bokad"
-                        : "Boka"}
+                      {isTimeBooked(getDayAndTime(day, i)) ? "Bokad" : "Boka"}
                     </Text>
                   </Button>
                 );
