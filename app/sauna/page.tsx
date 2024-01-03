@@ -1,28 +1,20 @@
 "use client";
-import { AlertDialog, Button, Flex, Grid, Text } from "@radix-ui/themes";
+import { Button, Flex, Grid, Text } from "@radix-ui/themes";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
 import { Toaster } from "react-hot-toast";
 import { z } from "zod";
 import { saunaDateBaseSchema, saunaSchema } from "../validationSchemas";
-import SaunaFormSkeleton from "./_components/SaunaFormSkeleton";
+import CreateAndUpdate from "./_components/CreateAndUpdate";
 import {
-  getAllHours,
   getAllDays,
+  getAllHours,
   moveToClosetsHour,
 } from "./_components/helperFunctions";
 type SaunaDateBaseType = z.infer<typeof saunaDateBaseSchema>;
 const extendedSaunaSchema = saunaSchema.merge(z.object({ id: z.number() }));
 type SaunaFormData = z.infer<typeof extendedSaunaSchema>;
-
-
-const SaunaForm = dynamic(() => import("@/app/sauna/_components/SaunaForm"), {
-  ssr: false,
-  loading: () => <SaunaFormSkeleton />,
-});
-const bookinHours = [];
 
 const allHours = getAllHours();
 const allDays = getAllDays(10);
@@ -77,7 +69,7 @@ const Sauna = () => {
     },
     {}
   );
-  
+
   const bookSauna = (e: any) => {
     const dateAndTime =
       e.target.dataset.dateAndTime ||
@@ -106,27 +98,13 @@ const Sauna = () => {
   return (
     <>
       <Toaster />
-      <AlertDialog.Root open={showDialog}>
-        <AlertDialog.Content>
-          <AlertDialog.Title>Boka tid</AlertDialog.Title>
-          <AlertDialog.Description>
-            Boka tiden {dateAndTime.slice(0, -8).replace("T", "  ")}
-          </AlertDialog.Description>
-          <SaunaForm
-            dateAndTime={dateAndTime}
-            refetch={refetch}
-            setShowDialog={setShowDialog}
-          />
-          <Button
-            color='gray'
-            variant='soft'
-            mt='2'
-            onClick={() => setShowDialog(false)}
-          >
-            OK
-          </Button>
-        </AlertDialog.Content>
-      </AlertDialog.Root>
+      {showDialog && (
+        <CreateAndUpdate
+          dateAndTime={dateAndTime}
+          refetch={refetch}
+          setShowDialog={setShowDialog}
+        />
+      )}
       <Grid style={styleForGrid} id='grid'>
         <Flex
           direction='column'

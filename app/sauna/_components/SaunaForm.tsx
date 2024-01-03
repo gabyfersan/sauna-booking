@@ -7,6 +7,7 @@ import { Sauna } from "@prisma/client";
 import { Button, Callout, Checkbox, Link } from "@radix-ui/themes";
 import axios from "axios";
 import "easymde/dist/easymde.min.css";
+import { Session } from "next-auth";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -15,6 +16,11 @@ import toast from "react-hot-toast";
 import Skeleton from "react-loading-skeleton";
 import SimpleMDE from "react-simplemde-editor";
 import { z } from "zod";
+
+// Create a new interface by merging the existing DefaultSession and the 'id' property
+interface CustomSession extends Omit<Session, "user"> {
+  user?: Session["user"] & { id?: string };
+}
 
 type SaunaFormData = z.infer<typeof patchSaunaSchema>;
 
@@ -38,8 +44,13 @@ const SaunaForm = ({
   } = useForm<SaunaFormData>({
     resolver: zodResolver(patchSaunaSchema),
   });
-  // remove any
-  const { status, data: session }: any = useSession();
+
+  const { data: session, status } = useSession() as {
+    data: CustomSession | null;
+    status: "loading" | "authenticated" | "unauthenticated";
+  };
+
+  // const { status, data: session }: any = useSession();
   if (status === "loading") {
     return <Skeleton width='3rem' />;
   }
