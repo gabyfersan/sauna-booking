@@ -11,6 +11,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 import Skeleton from "react-loading-skeleton";
 import SimpleMDE from "react-simplemde-editor";
 import { z } from "zod";
@@ -20,9 +21,13 @@ type SaunaFormData = z.infer<typeof patchSaunaSchema>;
 const SaunaForm = ({
   booking,
   dateAndTime,
+  refetch,
+  setShowDialog,
 }: {
   booking?: Sauna;
   dateAndTime: string;
+  refetch: () => void;
+  setShowDialog: (a: boolean) => void;
 }) => {
   const router = useRouter();
   const {
@@ -53,12 +58,14 @@ const SaunaForm = ({
         if (booking) {
           await axios.patch(`/api/sauna-bookings/${booking.id}`, data);
         } else {
-          console.log("session sauna token", session);
           await axios.post("/api/sauna-bookings", {
             ...data,
-            bookedAtDateAndTime: dateAndTime + ":00Z",
+            bookedAtDateAndTime: dateAndTime,
             bookedByUserId: session!.user!.id || "",
           });
+          refetch();
+          setShowDialog(false);
+          toast.success("Tiden bokad");
         }
         // router.push("/issues/list");
         // router.refresh();
