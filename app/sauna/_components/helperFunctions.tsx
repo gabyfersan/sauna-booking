@@ -61,7 +61,7 @@ export const getAllDays = (numberOfDaysInTheFuture: number) => {
 //   };
 // };
 
-export const getAllHours = () => {
+export const getAllHours = (): Array<string> => {
   console.log("getAllHours");
   const hours = [""];
   const currentDate = new Date();
