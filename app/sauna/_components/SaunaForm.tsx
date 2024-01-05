@@ -35,6 +35,7 @@ const SaunaForm = ({
   refetch: () => void;
   setShowDialog: (a: boolean) => void;
 }) => {
+  const [error, setError] = useState<string>("");
   const router = useRouter();
   const {
     register,
@@ -61,7 +62,7 @@ const SaunaForm = ({
       </Link>
     );
   }
-  const [error, setError] = useState<string>("");
+
   const onSubmit = handleSubmit(
     async (data) => {
       try {
