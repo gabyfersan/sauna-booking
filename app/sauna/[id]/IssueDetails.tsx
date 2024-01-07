@@ -16,7 +16,7 @@ const IssueDetails = ({ booke_sauna }: { booke_sauna: Sauna }) => {
         <Text>{booke_sauna.bookedAtDateAndTime.toDateString()}</Text>
       </Flex>
       <Card className='prose max-w-full' mt='4'>
-        <ReactMarkdown>{booke_sauna.message}</ReactMarkdown>
+        <ReactMarkdown>{booke_sauna.message || ""}</ReactMarkdown>
       </Card>
     </>
   );
