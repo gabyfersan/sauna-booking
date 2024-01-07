@@ -5,7 +5,7 @@ import ReactMarkdown from "react-markdown";
 const IssueDetails = ({ booke_sauna }: { booke_sauna: Sauna }) => {
   return (
     <>
-      <Heading>"Bokad tid"</Heading>
+      <Heading>Bokad tid</Heading>
       <Flex className='space-x-3' my='2'>
         {/* <IssueStatusBadge status={booke_sauna.shareSauna} /> */}
         <Text>
