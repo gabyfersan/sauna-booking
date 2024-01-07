@@ -32,8 +32,10 @@ const Sauna = () => {
     refetch,
     isSuccess,
   } = useSaunaBooking();
+
   useEffect(() => {
-    console.log("useEffect");
+    refetch();
+    window.scrollTo({ top: 0 });
     const gridElement = document.getElementById("grid");
 
     if (gridElement && gridElement.style && gridElement.style.height) {
@@ -41,6 +43,7 @@ const Sauna = () => {
       gridElement.style.height =
         innerHeight - gridElement.getBoundingClientRect().top - 30 + "px";
     }
+
     const element = document.getElementById("scroll-into-view");
     element && element.scrollIntoView({ behavior: "smooth", block: "center" });
   }, []);

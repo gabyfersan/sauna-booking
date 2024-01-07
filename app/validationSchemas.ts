@@ -8,7 +8,7 @@ export const patchSaunaSchema = z.object({
   message: z
     .string()
     .min(0)
-    .max(255, "Längden ska vara max vara 65535 tecken")
+    .max(255, "Längden ska vara max vara 255 tecken")
     .optional(),
 
   shareSauna: z.boolean().optional(),

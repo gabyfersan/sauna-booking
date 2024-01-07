@@ -16,8 +16,6 @@ import toast from "react-hot-toast";
 import Skeleton from "react-loading-skeleton";
 import SimpleMDE from "react-simplemde-editor";
 import { z } from "zod";
-
-// Create a new interface by merging the existing DefaultSession and the 'id' property
 interface CustomSession extends Omit<Session, "user"> {
   user?: Session["user"] & { id?: string };
 }
@@ -99,7 +97,6 @@ const SaunaForm = ({
 
       <form className='space-y-3' onSubmit={onSubmit}>
         <label>
-          Checkbox Field:
           <Controller
             name='shareSauna'
             control={control}
@@ -113,6 +110,8 @@ const SaunaForm = ({
               />
             )}
           />
+          {" "}
+          Dela bastutiden med någon annan
         </label>
 
         {/* <Controller

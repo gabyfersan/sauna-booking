@@ -1,8 +1,10 @@
 import { saunaDateBaseSchema, saunaSchema } from "@/app/validationSchemas";
 import { Button, Flex, Text } from "@radix-ui/themes";
+import { useRouter } from "next/navigation";
 import { z } from "zod";
 import { getAllDays, moveToClosetsHour } from "./helperFunctions";
 const allDays = getAllDays(10);
+console.log(allDays)
 type SaunaDateBaseType = z.infer<typeof saunaDateBaseSchema>;
 const extendedSaunaSchema = saunaSchema.merge(z.object({ id: z.number() }));
 type SaunaFormData = z.infer<typeof extendedSaunaSchema>;
@@ -18,6 +20,7 @@ const MatrixOfBokabelSlots = ({
   setShowDialog: (a: boolean) => void;
   saunaBooking: SaunaDateBaseType[];
 }) => {
+  const router = useRouter();
   console.log("MatrixOfBokabelSlots");
   const transformedSaunaBooking: Record<
     string,
@@ -66,10 +69,15 @@ const MatrixOfBokabelSlots = ({
     if (!dateAndTime) {
       return;
     }
+    if (isTimeBooked(dateAndTime)) {
+      router.push(`/sauna/${transformedSaunaBooking[dateAndTime].id}`);
+      return;
+    }
+
     setDateAndTime(dateAndTime);
     setShowDialog(true);
   };
-  
+
   return (
     <>
       {Array.from(Array(10).keys()).map((day: number) => {
@@ -80,12 +88,12 @@ const MatrixOfBokabelSlots = ({
                 <div
                   key={allDays[day].dateFormated[0]}
                   style={{
-                    margin: "2px",
+                    // margin: "2px",
                     backgroundColor: "#ffd8a8",
-                    opacity: 1,
-                    zIndex: 1,
+                    //  opacity: 1,
+                     // zIndex: 2,
                   }}
-                  className={`flex items-center justify-center flex-col sticky top-0  `}
+                  className={` flex items-center flex-col sticky top-0 m-1  z-[2]`}
                 >
                   <Text size='3' className='block'>
                     {allDays[day].dateFormated[0]}
@@ -107,10 +115,12 @@ const MatrixOfBokabelSlots = ({
                   }
                   data-date-and-time={getDayAndTime(day, i)}
                   key={getDayAndTime(day, i)}
-                  style={{
-                    margin: "2px 2px 2px 2px",
-                  }}
-                  className={`flex items-center justify-center active:bg-lime-100`}
+                  style={
+                    {
+                      // margin: "2px 2px 2px 2px",
+                    }
+                  }
+                  className={` active:bg-lime-100 m-1`}
                 >
                   <Text size='4'>
                     {isTimeBooked(getDayAndTime(day, i)) ? "Bokad" : "Boka"}

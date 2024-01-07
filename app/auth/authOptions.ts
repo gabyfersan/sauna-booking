@@ -31,13 +31,13 @@ const authOptions: NextAuthOptions = {
     session: async ({ session, token, user }: any) => {
       // console.log("SESSION", session);
       // console.log("USER", user);
-      console.log("token", token);
+      //console.log("token", token);
       if (session?.user?.email) {
         const userData = await prisma.user.findUnique({
           where: { email: session.user.email }, // Assuming user data is identified by email
           select: { id: true }, // Select the fields you need (e.g., id)
         });
-        console.log("session auth", session, userData);
+        //console.log("session auth", session, userData);
         if (userData) {
           session.user.id = userData.id; // Add the id to the session object
         }
