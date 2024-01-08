@@ -30,53 +30,39 @@ export const getAllDays = (numberOfDaysInTheFuture: number) => {
   return alldays;
 };
 
-// const getCurrentDateAndTime = () => {
-//   const date = new Date();
-//   return new Intl.DateTimeFormat("sv-SE", {
-//     year: "numeric",
-//     month: "numeric",
-//     day: "numeric",
-//     hour: "numeric",
-//     minute: "numeric",
-//     second: "numeric",
-//   }).format(date);
-// };
-
-// const getAllBookinHours = (index: number): { date: string }[] => {
-//   const allBookinHours = [];
-//   const all = getAll(index);
-//   console.log("getAllBookinHours");
-//   for (let i = 1; i <= 25; i++) {
-//     allBookinHours.push({
-//       date: all.dateNumerical + "T" + allHours[i - 1] + ":00.000Z",
-//     });
-//   }
-//   return allBookinHours;
-// };
-
-// const getDateFormated = (index: number): { date: string[] } => {
-//   console.log("getDateFormated");
-//   return {
-//     date: getAll(index).dateFormated,
-//   };
-// };
-
-export const getAllHours = (): Array<string> => {
-  console.log("getAllHours");
-  const hours = [""];
-  const currentDate = new Date();
-  currentDate.setHours(0);
-  currentDate.setMinutes(0);
-
-  for (let i = 1; i < 25; i++) {
-    currentDate.setHours(currentDate.getHours() + 1);
-    hours.push(currentDate.toISOString().slice(11, 16));
-  }
-  return hours;
-};
-
 export const moveToClosetsHour = (time: string) => {
   const newTime = new Date(time.slice(0, -1));
 
   return newTime.setHours(newTime.getHours() + 1);
+};
+
+
+export const getAllHours = (): Array<string> => {
+  return [
+    "",
+    "00:00",
+    "01:00",
+    "02:00",
+    "03:00",
+    "04:00",
+    "05:00",
+    "06:00",
+    "07:00",
+    "08:00",
+    "09:00",
+    "10:00",
+    "11:00",
+    "12:00",
+    "13:00",
+    "14:00",
+    "15:00",
+    "16:00",
+    "17:00",
+    "18:00",
+    "19:00",
+    "20:00",
+    "21:00",
+    "22:00",
+    "23:00",
+  ];
 };
