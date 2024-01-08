@@ -2,9 +2,9 @@ import { saunaDateBaseSchema, saunaSchema } from "@/app/validationSchemas";
 import { Button, Flex, Text } from "@radix-ui/themes";
 import { useRouter } from "next/navigation";
 import { z } from "zod";
-import { getAllDays, moveToClosetsHour } from "./helperFunctions";
+import { getAllDays } from "./helperFunctions";
 const allDays = getAllDays(10);
-console.log(allDays)
+console.log(allDays);
 type SaunaDateBaseType = z.infer<typeof saunaDateBaseSchema>;
 const extendedSaunaSchema = saunaSchema.merge(z.object({ id: z.number() }));
 type SaunaFormData = z.infer<typeof extendedSaunaSchema>;
@@ -22,6 +22,21 @@ const MatrixOfBokabelSlots = ({
 }) => {
   const router = useRouter();
   console.log("MatrixOfBokabelSlots");
+  const moveToClosetsHour = (time: string) => {
+    const newTime = new Date(time.slice(0, -1));
+    newTime.setHours(newTime.getHours() + 1);
+    // console.log("----------");
+    // console.log(" newTime", newTime);
+    // console.log("time", time);
+    // console.log(" newTime +1 jour", newTime);
+    // console.log("  new Date()", new Date());
+    // console.log(
+    //   " new Date().getTime()-newTime.getTime()",
+    //   (new Date().getTime() - newTime.getTime()) / (1000 * 3600)
+    // );
+    return newTime.getTime();
+  };
+
   const transformedSaunaBooking: Record<
     string,
     Omit<SaunaFormData, "bookedAtDateAndTime">
@@ -91,7 +106,7 @@ const MatrixOfBokabelSlots = ({
                     // margin: "2px",
                     backgroundColor: "#ffd8a8",
                     //  opacity: 1,
-                     // zIndex: 2,
+                    // zIndex: 2,
                   }}
                   className={` flex items-center flex-col sticky top-0 m-1  z-[2]`}
                 >
@@ -110,8 +125,9 @@ const MatrixOfBokabelSlots = ({
                   variant='classic'
                   size='4'
                   disabled={
+                    day === 0 &&
                     new Date().getTime() >
-                    moveToClosetsHour(getDayAndTime(day, i))
+                      moveToClosetsHour(getDayAndTime(day, i))
                   }
                   data-date-and-time={getDayAndTime(day, i)}
                   key={getDayAndTime(day, i)}
@@ -123,7 +139,12 @@ const MatrixOfBokabelSlots = ({
                   className={` active:bg-lime-100 m-1`}
                 >
                   <Text size='4'>
-                    {isTimeBooked(getDayAndTime(day, i)) ? "Bokad" : "Boka"}
+                    {/* {isTimeBooked(getDayAndTime(day, i)) ? "Bokad" : "Boka"} */}
+                    {day === 0 &&
+                    new Date().getTime() >
+                      moveToClosetsHour(getDayAndTime(day, i))
+                      ? "Disabled"
+                      : "Abled"}
                   </Text>
                 </Button>
               );

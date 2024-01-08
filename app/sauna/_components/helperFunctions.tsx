@@ -1,5 +1,4 @@
 export const getAllDays = (numberOfDaysInTheFuture: number) => {
-  console.log("getall");
   const alldays = [];
 
   for (
@@ -32,10 +31,8 @@ export const getAllDays = (numberOfDaysInTheFuture: number) => {
 
 export const moveToClosetsHour = (time: string) => {
   const newTime = new Date(time.slice(0, -1));
-
   return newTime.setHours(newTime.getHours() + 1);
 };
-
 
 export const getAllHours = (): Array<string> => {
   return [
