@@ -4,7 +4,6 @@ import { useRouter } from "next/navigation";
 import { z } from "zod";
 import { getAllDays } from "./helperFunctions";
 const allDays = getAllDays(10);
-console.log(allDays);
 type SaunaDateBaseType = z.infer<typeof saunaDateBaseSchema>;
 const extendedSaunaSchema = saunaSchema.merge(z.object({ id: z.number() }));
 type SaunaFormData = z.infer<typeof extendedSaunaSchema>;

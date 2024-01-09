@@ -1,8 +1,19 @@
-import { Box, Grid } from "@radix-ui/themes";
+import { Grid } from "@radix-ui/themes";
+import { PropsWithChildren } from "react";
 import Skeleton from "react-loading-skeleton";
+let styleForGrid = {
+  gridTemplateColumns: "1fr 1fr 1fr 1fr  1fr  1fr  1fr 1fr 1fr  1fr  1fr  1fr",
+  // height: "2000px",
+  // width: "100%",
+  overflow: "auto",
+};
+
+
 
 const LoadingSaunaPage = () => {
   return (
+    // Method 1: Use the wrapper prop
+
     // <Grid columns='10' rows='25' width='auto' gap='1'>
     //   {Array.from(Array(240).keys()).map((i) => (
     //     // <Skeleton key={i} width='6.5rem' height='3rem' />
@@ -13,11 +24,13 @@ const LoadingSaunaPage = () => {
     //     </div>
     //   ))}
     // </Grid>
-    <Grid columns='10' rows=' 25' gap='3'>
+    <Grid style={styleForGrid} gap="2">
+      {/* <Skeleton  count={250} /> */}
       {Array.from(Array(240).keys()).map((i) => (
-        <Box key={i} height='7'>
-          <Skeleton height='100%' width='100%' />
-        </Box>
+        <Skeleton key={i} width='6.2rem' height='2.9rem' />
+        // <Box key={i} height='7'>
+        //   <Skeleton height='100%' width='100%' />
+        // </Box>
       ))}
       {/* <Flex direction='column' gap='3'>
         <Box grow='1'>
