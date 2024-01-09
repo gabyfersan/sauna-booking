@@ -10,6 +10,7 @@ import ColumnHours from "./_components/ColumnHours";
 import CreateAndUpdate from "./_components/CreateAndUpdate";
 import { getAllHours } from "./_components/helperFunctions";
 import MatrixOfBokabelSlots from "./_components/MatrixOfBokabelSlots";
+import LoadingSaunaPage from "./loading";
 type SaunaDateBaseType = z.infer<typeof saunaDateBaseSchema>;
 const allHours = getAllHours();
 
@@ -21,10 +22,6 @@ let styleForGrid = {
 };
 
 const Sauna = () => {
-  console.log("repaint");
-
-  const [showDialog, setShowDialog] = useState(false);
-  const [dateAndTime, setDateAndTime] = useState<string>("");
   const {
     data: saunaBooking,
     error,
@@ -32,7 +29,6 @@ const Sauna = () => {
     refetch,
     isSuccess,
   } = useSaunaBooking();
-
   useEffect(() => {
     refetch();
     window.scrollTo({ top: 0 });
@@ -46,7 +42,17 @@ const Sauna = () => {
 
     const element = document.getElementById("scroll-into-view");
     element && element.scrollIntoView({ behavior: "smooth", block: "center" });
-  }, []);
+  }, [isSuccess]);
+
+  console.log("repaint");
+
+  const [showDialog, setShowDialog] = useState(false);
+  const [dateAndTime, setDateAndTime] = useState<string>("");
+
+  if (isLoading) {
+    console.log("LoadingSaunaPage");
+    return <LoadingSaunaPage />;
+  }
 
   return (
     <>
