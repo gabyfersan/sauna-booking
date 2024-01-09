@@ -1,29 +1,60 @@
+const getDateFormated = (date: Date): string =>
+  new Intl.DateTimeFormat("sv-SE", {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    hour: "numeric",
+  }).format(date);
+
+const getDateAndTimeNumerical = (date: Date): string =>
+  new Intl.DateTimeFormat("sv-SE", {
+    year: "numeric",
+    month: "numeric",
+    day: "numeric",
+    hour: "numeric",
+    minute: "numeric",
+  }).format(date);
+
+const getDateNumerical = (date: Date): string =>
+  new Intl.DateTimeFormat("sv-SE", {
+    year: "numeric",
+    month: "numeric",
+    day: "numeric",
+  }).format(date);
+
+export const getADateFormated = (
+  startDate: Date,
+  endDate: Date
+): {
+  dateFormated: string[];
+  dateNumerical: string;
+  dateAndTimeNumerical: string;
+  daysAndHours: { days: number; hours: number; minutes: number };
+} => {
+  const dateFormated = getDateFormated(endDate).split(" ");
+  const dateNumerical = getDateNumerical(endDate);
+  const dateAndTimeNumerical = getDateAndTimeNumerical(endDate);
+  const daysAndHours = getDaysAndHours(startDate, endDate);
+
+  return { dateFormated, dateNumerical, dateAndTimeNumerical, daysAndHours };
+};
+
 export const getAllDays = (numberOfDaysInTheFuture: number) => {
   const alldays = [];
 
   for (
-    let umbersOfDays = 0;
-    umbersOfDays <= numberOfDaysInTheFuture - 1;
-    umbersOfDays++
+    let numbersOfDays = 0;
+    numbersOfDays <= numberOfDaysInTheFuture - 1;
+    numbersOfDays++
   ) {
     let date = new Date();
-    date.setDate(date.getDate() + umbersOfDays);
+    date.setDate(date.getDate() + numbersOfDays);
 
-    const dateFormated = new Intl.DateTimeFormat("sv-SE", {
-      weekday: "long",
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-    })
-      .format(date)
-      .split(" ");
+    const dateFormated = getDateFormated(date).split(" ");
 
     date.setDate(date.getDate());
-    const dateNumerical = new Intl.DateTimeFormat("sv-SE", {
-      year: "numeric",
-      month: "numeric",
-      day: "numeric",
-    }).format(date);
+    const dateNumerical = getDateNumerical(date);
     alldays.push({ dateFormated, dateNumerical });
   }
   return alldays;
@@ -32,6 +63,22 @@ export const getAllDays = (numberOfDaysInTheFuture: number) => {
 export const moveToClosetsHour = (time: string) => {
   const newTime = new Date(time.slice(0, -1));
   return newTime.setHours(newTime.getHours() + 1);
+};
+
+export const getDaysAndHours = (
+  startDate: Date,
+  endDate: Date
+): { days: number; hours: number; minutes: number } => {
+  const conversionToHours = 1000 * 60 * 60;
+  const date1: number = startDate.getTime();
+  const date2: number = endDate.getTime();
+  const diffInMs = date2 - date1;
+  const days = Math.floor(diffInMs / (conversionToHours * 24));
+  const hours = Math.floor(
+    (diffInMs % (conversionToHours * 24)) / conversionToHours
+  );
+  const minutes = Math.floor((diffInMs % conversionToHours) / (1000 * 60));
+  return { days, hours, minutes };
 };
 
 export const getAllHours = (): Array<string> => {
