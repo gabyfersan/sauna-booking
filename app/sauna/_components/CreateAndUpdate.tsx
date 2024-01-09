@@ -1,7 +1,11 @@
 "use client";
+import { Sauna } from "@prisma/client";
 import { AlertDialog, Button } from "@radix-ui/themes";
 import dynamic from "next/dynamic";
 import SaunaFormSkeleton from "./SaunaFormSkeleton";
+import { saunaDateBaseSchema } from "@/app/validationSchemas";
+import { z } from "zod";
+type SaunaDateBaseType = z.infer<typeof saunaDateBaseSchema>;
 //import SaunaForm from "./SaunaForm";
 
 const SaunaForm = dynamic(() => import("@/app/sauna/_components/SaunaForm"), {
@@ -13,9 +17,11 @@ const createAndUpdate = ({
   dateAndTime,
   refetch,
   setShowDialog,
+  booking,
 }: {
-  dateAndTime: string;
-  refetch: () => void;
+  booking?: SaunaDateBaseType;
+  dateAndTime?: string;
+  refetch?: () => void;
   setShowDialog: (a: boolean) => void;
 }) => {
   return (
@@ -23,9 +29,12 @@ const createAndUpdate = ({
       <AlertDialog.Content>
         <AlertDialog.Title>Boka tid</AlertDialog.Title>
         <AlertDialog.Description>
-          Boka tiden {dateAndTime.slice(0, -8).replace("T", "  ")}
+          {dateAndTime
+            ? `Boka tiden ${dateAndTime.slice(0, -8).replace("T", "  ")}`
+            : "Ändra"}
         </AlertDialog.Description>
         <SaunaForm
+          booking={booking}
           dateAndTime={dateAndTime}
           refetch={refetch}
           setShowDialog={setShowDialog}
@@ -36,7 +45,7 @@ const createAndUpdate = ({
           mt='2'
           onClick={() => setShowDialog(false)}
         >
-          OK
+          Stäng
         </Button>
       </AlertDialog.Content>
     </AlertDialog.Root>

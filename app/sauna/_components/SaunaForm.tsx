@@ -1,9 +1,8 @@
 "use client";
 import ErrorMessage from "@/app/components/ErrorMessage";
 import Spinner from "@/app/components/Spinner";
-import { patchSaunaSchema } from "@/app/validationSchemas";
+import { patchSaunaSchema, saunaDateBaseSchema } from "@/app/validationSchemas";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Sauna } from "@prisma/client";
 import { Button, Callout, Checkbox, Link } from "@radix-ui/themes";
 import axios from "axios";
 import "easymde/dist/easymde.min.css";
@@ -16,6 +15,7 @@ import toast from "react-hot-toast";
 import Skeleton from "react-loading-skeleton";
 import SimpleMDE from "react-simplemde-editor";
 import { z } from "zod";
+type SaunaDateBaseType = z.infer<typeof saunaDateBaseSchema>;
 interface CustomSession extends Omit<Session, "user"> {
   user?: Session["user"] & { id?: string };
 }
@@ -28,9 +28,9 @@ const SaunaForm = ({
   refetch,
   setShowDialog,
 }: {
-  booking?: Sauna;
-  dateAndTime: string;
-  refetch: () => void;
+  booking?: SaunaDateBaseType;
+  dateAndTime?: string;
+  refetch?: () => void;
   setShowDialog: (a: boolean) => void;
 }) => {
   const [error, setError] = useState<string>("");
@@ -67,15 +67,17 @@ const SaunaForm = ({
         console.log("data", data);
         if (booking) {
           await axios.patch(`/api/sauna-bookings/${booking.id}`, data);
+          setShowDialog(false);
+          toast.success("Bokningen är ändrad");
         } else {
           await axios.post("/api/sauna-bookings", {
             ...data,
             bookedAtDateAndTime: dateAndTime,
             bookedByUserId: session!.user!.id || "",
           });
-          refetch();
+          refetch && refetch();
           setShowDialog(false);
-          toast.success("Tiden bokad");
+          toast.success("Tiden är bokad bokad");
         }
         // router.push("/issues/list");
         // router.refresh();
@@ -109,11 +111,9 @@ const SaunaForm = ({
                 onCheckedChange={field.onChange}
               />
             )}
-          />
-          {" "}
+          />{" "}
           Dela bastutiden med någon annan
         </label>
-
         {/* <Controller
           name='shareSauna'
           control={control}
@@ -127,7 +127,6 @@ const SaunaForm = ({
             />
           )}
         /> */}
-
         {/* <Text size='2'>
           <Flex gap='2'> */}
         {/* <Checkbox
@@ -140,12 +139,11 @@ const SaunaForm = ({
         {/* Dela bastu
           </Flex>
         </Text> */}
-
         <ErrorMessage>{errors.message?.message}</ErrorMessage>
         <Controller
           name='message'
           control={control}
-          // defaultValue={booking?.message}
+          defaultValue={booking?.message || ""}
           render={({ field }) => (
             <SimpleMDE placeholder='Meddelande' {...field} />
           )}
@@ -154,11 +152,9 @@ const SaunaForm = ({
           defaultValue='kjhlkjhlkjhlkj'
           {...register("message")}
         /> */}
-
         <ErrorMessage>{errors.message?.message}</ErrorMessage>
-
         <Button disabled={isSubmitting} type='submit'>
-          {booking ? "Uppdatera bookning" : "Boka"}
+          {booking ? "Uppdatera bokningen" : "Boka"}
           {isSubmitting && <Spinner />}
         </Button>
       </form>

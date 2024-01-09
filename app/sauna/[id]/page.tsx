@@ -1,30 +1,48 @@
-import authOptions from "@/app/auth/authOptions";
-import { Link } from "@/app/components";
-import prisma from "@/prisma/client";
+"use client";
+import { saunaDateBaseSchema } from "@/app/validationSchemas";
 import { Box, Button, Flex, Grid } from "@radix-ui/themes";
-import { getServerSession } from "next-auth";
+import { Session } from "next-auth";
+import { useSession } from "next-auth/react";
+import Link from "next/link";
 import { notFound } from "next/navigation";
-import { cache } from "react";
-import DeleteIssueButton from "./DeleteIssueButton";
-import EditIssueButton from "./EditIssueButton";
-import IssueDetails from "./IssueDetails";
+import { useState } from "react";
+import { z } from "zod";
+import CreateAndUpdate from "../_components/CreateAndUpdate";
+import useQueryGetSaunaBooking from "../_components/useQuerySauna";
+import DeleteSaunaButton from "./DeleteSaunaButton";
+import EditSaunaButton from "./EditSaunaButton";
+import SaunaDetails from "./SaunaDetails";
+import LoadingSaunaDetailPage from "./loading";
+type SaunaDateBaseType = z.infer<typeof saunaDateBaseSchema>;
+interface CustomSession extends Omit<Session, "user"> {
+  user?: Session["user"] & { id?: string };
+}
 
 interface Props {
   params: { id: string };
 }
 
-const fecthBookedSauna = cache((issueId: number) =>
-  prisma.sauna.findUnique({
-    where: { id: issueId },
-  })
-);
+// const fecthBookedSauna = cache((issueId: number) =>
+//   prisma.sauna.findUnique({
+//     where: { id: issueId },
+//   })
+// );
 
-const IssueDetailPage = async ({ params }: Props) => {
-  console.log("id sauna", parseInt(params.id));
-  const session = await getServerSession(authOptions);
-  const booke_sauna = await fecthBookedSauna(parseInt(params.id));
-  console.log("booke_sauna", booke_sauna);
-  if (!booke_sauna) {
+const SaunaDetailPage = ({ params }: Props) => {
+  const [showDialog, setShowDialog] = useState(false);
+  const [saunaBooking, error, isLoading, refetch, isSuccess] =
+    useQueryGetSaunaBooking(params.id);
+
+  const { data: session, status } = useSession() as {
+    data: CustomSession | null;
+    status: "loading" | "authenticated" | "unauthenticated";
+  };
+  if (isLoading) {
+    return <LoadingSaunaDetailPage />;
+  }
+  refetch();
+  // console.log("booke_sauna, session", saunaBooking, session);
+  if (!saunaBooking) {
     notFound();
   }
   return (
@@ -32,20 +50,25 @@ const IssueDetailPage = async ({ params }: Props) => {
       <Button>
         <Link href={`/sauna`}>Tillbaka</Link>
       </Button>
-      <Grid columns={{ initial: "1", sm: "5" }} gap='5'>
-        <Box className='md:col-span-4'>
-          <IssueDetails booke_sauna={booke_sauna} />
-        </Box>
-        {session && (
-          <Box>
-            <Flex direction='column' gap='4'>
-              {/* <AssigneeSelect issue={issue} /> */}
-              <EditIssueButton issueId={booke_sauna.id} />
-              <DeleteIssueButton saunaId={booke_sauna.id} />
-            </Flex>
+      {saunaBooking && (
+        <Grid columns={{ initial: "1", sm: "5" }} gap='5'>
+          <Box className='md:col-span-4'>
+            <SaunaDetails saunaBooking={saunaBooking} />
           </Box>
-        )}
-      </Grid>
+          {session?.user?.id === saunaBooking.bookedByUserId && (
+            <Box>
+              <Flex direction='column' gap='4'>
+                {/* <AssigneeSelect issue={issue} /> */}
+                <EditSaunaButton setShowDialog={setShowDialog} />
+                <DeleteSaunaButton saunaId={saunaBooking.id} />
+              </Flex>
+            </Box>
+          )}
+        </Grid>
+      )}
+      {showDialog && saunaBooking && (
+        <CreateAndUpdate setShowDialog={setShowDialog} booking={saunaBooking} />
+      )}
     </>
   );
 };
@@ -58,4 +81,4 @@ const IssueDetailPage = async ({ params }: Props) => {
 //   };
 // }
 
-export default IssueDetailPage;
+export default SaunaDetailPage;

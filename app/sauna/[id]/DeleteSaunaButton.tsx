@@ -6,11 +6,11 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-const DeleteIssueButton = ({ saunaId }: { saunaId: number }) => {
+const DeleteSaunaButton = ({ saunaId }: { saunaId: number }) => {
   const router = useRouter();
   const [error, setError] = useState(false);
   const [isDeleting, setisDeleting] = useState(false);
-  const deleteIssue = async () => {
+  const deleteSaunaBooking = async () => {
     try {
       setisDeleting(true);
       await axios.delete(`/api/sauna-bookings/${saunaId}`);
@@ -27,24 +27,23 @@ const DeleteIssueButton = ({ saunaId }: { saunaId: number }) => {
       <AlertDialog.Root>
         <AlertDialog.Trigger>
           <Button color='red' disabled={isDeleting}>
-            Delete Issue {isDeleting && <Spinner />}
+            Radera bokningen {isDeleting && <Spinner />}
           </Button>
         </AlertDialog.Trigger>
         <AlertDialog.Content>
           <AlertDialog.Title>Confirm Deletion</AlertDialog.Title>
           <AlertDialog.Description>
-            Are you sure you want to delete this issue? This action cannot be
-            undone.
+          Är du säker på att radera bokningen. Det går inte att ångra
           </AlertDialog.Description>
           <Flex mt='4' gap='3'>
             <AlertDialog.Cancel>
               <Button variant='soft' color='gray'>
-                Cancel
+                Avbryt
               </Button>
             </AlertDialog.Cancel>
             <AlertDialog.Action>
-              <Button color='red' onClick={deleteIssue}>
-                Delete Issue
+              <Button color='red' onClick={deleteSaunaBooking}>
+               Radera bokning
               </Button>
             </AlertDialog.Action>
           </Flex>
@@ -54,7 +53,7 @@ const DeleteIssueButton = ({ saunaId }: { saunaId: number }) => {
         <AlertDialog.Content>
           <AlertDialog.Title>Error</AlertDialog.Title>
           <AlertDialog.Description>
-            This issue could not be deleted.
+            Bokningen gick inte att radera
           </AlertDialog.Description>
           <Button
             color='gray'
@@ -70,4 +69,4 @@ const DeleteIssueButton = ({ saunaId }: { saunaId: number }) => {
   );
 };
 
-export default DeleteIssueButton;
+export default DeleteSaunaButton;
