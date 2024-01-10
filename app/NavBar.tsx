@@ -1,8 +1,10 @@
 "use client";
 import { Skeleton } from "@/app/components";
+import { CaretDownIcon } from "@radix-ui/react-icons";
 import {
   Avatar,
   Box,
+  Button,
   Container,
   DropdownMenu,
   Flex,
@@ -11,7 +13,7 @@ import {
 import classnames from "classnames";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { AiFillBug } from "react-icons/ai";
 
 const NavBar = () => {
@@ -24,6 +26,7 @@ const NavBar = () => {
               <AiFillBug />
             </Link>
             <NavLinks />
+            <SaunaLinks />
           </Flex>
           <AuthStatus />
         </Flex>
@@ -94,6 +97,28 @@ const AuthStatus = () => {
         </DropdownMenu.Content>
       </DropdownMenu.Root>
     </Box>
+  );
+};
+
+const SaunaLinks = () => {
+  const router = useRouter();
+  return (
+    <DropdownMenu.Root>
+      <DropdownMenu.Trigger>
+        <Button variant="ghost" color='gray'>
+          Bastu
+          <CaretDownIcon />
+        </Button>
+      </DropdownMenu.Trigger>
+      <DropdownMenu.Content>
+        <DropdownMenu.Item onSelect={() => router.push("/sauna")}>
+          Boka tid
+        </DropdownMenu.Item>
+        <DropdownMenu.Item onSelect={() => router.push("/sauna/list")}>
+          Mina bokningar
+        </DropdownMenu.Item>
+      </DropdownMenu.Content>
+    </DropdownMenu.Root>
   );
 };
 
