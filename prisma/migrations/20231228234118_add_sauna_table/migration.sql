@@ -1,11 +1,3 @@
-DROP TABLE IF EXISTS `Issue`;
-DROP TABLE IF EXISTS `Account`;
-DROP TABLE IF EXISTS `Session`;
-DROP TABLE IF EXISTS `User`;
-DROP TABLE IF EXISTS `VerificationToken`;
-DROP TABLE IF EXISTS `Sauna`;
-DROP TABLE IF EXISTS `_prisma_migrations`
-
 CREATE TABLE `Sauna` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `bookedAtDateAndTime` DATETIME(3) NOT NULL,
@@ -69,6 +61,8 @@ CREATE TABLE `User` (
     `email` VARCHAR(191) NULL,
     `emailVerified` DATETIME(3) NULL,
     `image` VARCHAR(191) NULL,
+    `hashedPassword` VARCHAR(191) NULL,
+    `role` VARCHAR(191) NULL,
 
     UNIQUE INDEX `User_email_key`(`email`),
     PRIMARY KEY (`id`)

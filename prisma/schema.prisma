@@ -14,7 +14,7 @@ datasource db {
 
 model Sauna {
   id                  Int      @id @default(autoincrement())
-  bookedAtDateAndTime DateTime @db.Timestamp() @unique
+  bookedAtDateAndTime DateTime @unique @db.Timestamp()
   message             String?  @db.VarChar(255)
   shareSauna          Boolean  @default(false)
   createdAt           DateTime @default(now())
@@ -72,6 +72,8 @@ model User {
   name           String?
   email          String?   @unique
   emailVerified  DateTime?
+  hashedPassword String?
+  role           String?
   image          String?
   accounts       Account[]
   sessions       Session[]
