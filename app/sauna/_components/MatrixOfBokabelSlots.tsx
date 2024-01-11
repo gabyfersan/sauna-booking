@@ -138,12 +138,12 @@ const MatrixOfBokabelSlots = ({
                   className={` active:bg-lime-100 m-1`}
                 >
                   <Text size='4'>
-                    {/* {isTimeBooked(getDayAndTime(day, i)) ? "Bokad" : "Boka"} */}
-                    {day === 0 &&
+                    {isTimeBooked(getDayAndTime(day, i)) ? "Bokad" : "Boka"}
+                    {/* {day === 0 &&
                     new Date().getTime() >
                       moveToClosetsHour(getDayAndTime(day, i))
                       ? "Disabled"
-                      : "Abled"}
+                      : "Abled"} */}
                   </Text>
                 </Button>
               );
