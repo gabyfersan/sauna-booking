@@ -2,6 +2,7 @@ import { Container, Theme } from "@radix-ui/themes";
 import "@radix-ui/themes/styles.css";
 import { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { Toaster } from "react-hot-toast";
 import NavBar from "./NavBar";
 import QueryClientProvider from "./QueryClientProvider";
 import AuthProvider from "./auth/Provider";
@@ -44,6 +45,7 @@ export default function RootLayout({
               {/* <Theme appearance='light' accentColor='violet'> */}
               <NavBar />
               <main className='p-5'>
+                <Toaster />
                 <Container>{children}</Container>
               </main>
             </Theme>
