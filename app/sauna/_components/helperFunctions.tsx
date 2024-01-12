@@ -1,3 +1,10 @@
+import { saunaDateBaseSchema, saunaSchema } from "@/app/validationSchemas";
+import { z } from "zod";
+type SaunaDateBaseType = z.infer<typeof saunaDateBaseSchema>;
+
+const extendedSaunaSchema = saunaSchema.merge(z.object({ id: z.number() }));
+type SaunaFormData = z.infer<typeof extendedSaunaSchema>;
+
 const getDateFormated = (date: Date): string =>
   new Intl.DateTimeFormat("sv-SE", {
     weekday: "long",
@@ -130,3 +137,38 @@ export function roundDownToNearestHour(date: string) {
     minute: "numeric",
   }).format(roundedDateTime);
 }
+
+export const getSaunaBookingInformationGetter = (
+  saunaBookings: SaunaDateBaseType[]
+) => {
+  const transformedSaunaBooking: Record<
+    string,
+    Omit<SaunaFormData, "bookedAtDateAndTime">
+  > = getTransformedSaunaBooking(saunaBookings);
+
+  return (time: string, key: string): any => {
+    // Remove Any
+    if (transformedSaunaBooking[time]) {
+      return (transformedSaunaBooking[time] as any)[key] ?? null;
+    }
+    return null;
+  };
+};
+
+const getTransformedSaunaBooking = (saunaBookings: SaunaDateBaseType[]) => {
+  return saunaBookings.reduce(
+    (
+      acc: Record<string, Omit<SaunaFormData, "bookedAtDateAndTime">>,
+      item: SaunaDateBaseType
+    ) => {
+      acc[item.bookedAtDateAndTime] = {
+        id: item.id,
+        message: item.message,
+        shareSauna: item.shareSauna,
+        bookedByUserId: item.bookedByUserId,
+      };
+      return acc;
+    },
+    {}
+  );
+};

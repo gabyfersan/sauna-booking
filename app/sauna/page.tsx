@@ -71,7 +71,7 @@ const Sauna = () => {
           allHours={allHours}
           setDateAndTime={setDateAndTime}
           setShowDialog={setShowDialog}
-          saunaBooking={saunaBooking || []}
+          saunaBookings={saunaBooking || []}
           session={session}
         />
       </Grid>

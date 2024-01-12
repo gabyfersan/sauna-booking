@@ -1,25 +1,26 @@
-import { saunaDateBaseSchema, saunaSchema } from "@/app/validationSchemas";
+import { saunaDateBaseSchema } from "@/app/validationSchemas";
 import { EnvelopeOpenIcon } from "@radix-ui/react-icons";
 import { Button, Flex, Text } from "@radix-ui/themes";
 import { useRouter } from "next/navigation";
 import { z } from "zod";
-import { getAllDays } from "./helperFunctions";
+import {
+  getAllDays,
+  getSaunaBookingInformationGetter,
+} from "./helperFunctions";
 const allDays = getAllDays(10);
 type SaunaDateBaseType = z.infer<typeof saunaDateBaseSchema>;
-const extendedSaunaSchema = saunaSchema.merge(z.object({ id: z.number() }));
-type SaunaFormData = z.infer<typeof extendedSaunaSchema>;
 
 const MatrixOfBokabelSlots = ({
   allHours,
   setDateAndTime,
   setShowDialog,
-  saunaBooking,
+  saunaBookings,
   session,
 }: {
   allHours: string[];
   setDateAndTime: (a: string) => void;
   setShowDialog: (a: boolean) => void;
-  saunaBooking: SaunaDateBaseType[];
+  saunaBookings: SaunaDateBaseType[];
   session: any;
 }) => {
   const router = useRouter();
@@ -38,34 +39,14 @@ const MatrixOfBokabelSlots = ({
     return newTime.getTime();
   };
 
-  const transformedSaunaBooking: Record<
-    string,
-    Omit<SaunaFormData, "bookedAtDateAndTime">
-  > = saunaBooking.reduce(
-    (
-      acc: { [key: string]: Omit<SaunaFormData, "bookedAtDateAndTime"> },
-      item: SaunaDateBaseType
-    ) => {
-      acc[item.bookedAtDateAndTime] = {
-        id: item.id,
-        message: item.message,
-        shareSauna: item.shareSauna,
-        bookedByUserId: item.bookedByUserId,
-      };
-      return acc;
-    },
-    {}
-  );
-
+  const transformedSaunaBooking =
+    getSaunaBookingInformationGetter(saunaBookings);
   const isTimeBooked = (dateAndTime: string) => {
-    return transformedSaunaBooking && transformedSaunaBooking[dateAndTime];
+    return !!transformedSaunaBooking(dateAndTime, "bookedByUserId");
   };
 
   const colorOfButton = (dateAndTime: string) => {
-    if (
-      isTimeBooked(dateAndTime) &&
-      transformedSaunaBooking[dateAndTime].shareSauna
-    ) {
+    if (transformedSaunaBooking(dateAndTime, "shareSauna")) {
       return "yellow";
     }
     if (isTimeBooked(dateAndTime)) {
@@ -86,10 +67,9 @@ const MatrixOfBokabelSlots = ({
       return;
     }
     if (isTimeBooked(dateAndTime)) {
-      router.push(`/sauna/${transformedSaunaBooking[dateAndTime].id}`);
+      router.push(`/sauna/${transformedSaunaBooking(dateAndTime, "id")}`);
       return;
     }
-
     setDateAndTime(dateAndTime);
     setShowDialog(true);
   };
@@ -100,6 +80,7 @@ const MatrixOfBokabelSlots = ({
         return (
           <Flex direction='column' key={day} onClick={bookSauna}>
             {Array.from(Array(25).keys()).map((i) => {
+
               const shouldDisabledButton =
                 day === 0 &&
                 new Date().getTime() > moveToClosetsHour(getDayAndTime(day, i));
@@ -127,29 +108,26 @@ const MatrixOfBokabelSlots = ({
                   data-date-and-time={getDayAndTime(day, i)}
                   key={getDayAndTime(day, i)}
                   className={` active:bg-lime-100 m-1 ${
-                    !shouldDisabledButton && transformedSaunaBooking[getDayAndTime(day, i)] &&
+                    !shouldDisabledButton &&
                     session.user.id ===
-                      transformedSaunaBooking[getDayAndTime(day, i)]
-                        .bookedByUserId
+                      transformedSaunaBooking(
+                        getDayAndTime(day, i),
+                        "bookedByUserId"
+                      )
                       ? "border-4 border-rose-950 border-solid"
                       : ""
                   }`}
                 >
                   <Text size='4'>
                     {!shouldDisabledButton &&
-                    transformedSaunaBooking[getDayAndTime(day, i)] &&
-                    transformedSaunaBooking[getDayAndTime(day, i)].message ? (
+                    transformedSaunaBooking(
+                      getDayAndTime(day, i),
+                      "message"
+                    ) ? (
                       <EnvelopeOpenIcon />
                     ) : (
                       ""
                     )}
-                    {/*
-                      {isTimeBooked(getDayAndTime(day, i)) ? "Bokad" : ""}
-                      {day === 0 &&
-                    new Date().getTime() >
-                      moveToClosetsHour(getDayAndTime(day, i))
-                      ? "Disabled"
-                      : "Abled"} */}
                   </Text>
                 </Button>
               );
@@ -162,3 +140,13 @@ const MatrixOfBokabelSlots = ({
 };
 
 export default MatrixOfBokabelSlots;
+
+{
+  /*
+                      {isTimeBooked(getDayAndTime(day, i)) ? "Bokad" : ""}
+                      {day === 0 &&
+                    new Date().getTime() >
+                      moveToClosetsHour(getDayAndTime(day, i))
+                      ? "Disabled"
+                      : "Abled"} */
+}

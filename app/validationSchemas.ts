@@ -42,7 +42,7 @@ export const patchSaunaSchema = z
       .max(255, "Längden ska vara max vara 255 tecken")
       .optional(),
 
-    shareSauna: z.boolean().optional(),
+    shareSauna: z.boolean().optional().default(false),
   })
   .strict(strictErrorMessage);
 
