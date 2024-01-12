@@ -110,3 +110,23 @@ export const getAllHours = (): Array<string> => {
     "23:00",
   ];
 };
+
+export function roundDownToNearestHour(date: string) {
+  var currentDateTime = new Date(date.replace("Z", ""));
+  var roundedDateTime = new Date(
+    currentDateTime.getFullYear(),
+    currentDateTime.getMonth(),
+    currentDateTime.getDate(),
+    currentDateTime.getHours(), // Add 1 hour to round up
+    0, // Reset minutes to 0
+    0 // Reset seconds to 0
+  );
+
+  return new Intl.DateTimeFormat("sv-SE", {
+    year: "numeric",
+    month: "numeric",
+    day: "numeric",
+    hour: "numeric",
+    minute: "numeric",
+  }).format(roundedDateTime);
+}

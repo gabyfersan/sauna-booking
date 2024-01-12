@@ -52,7 +52,7 @@ export const saunaSchema = patchSaunaSchema
   .merge(
     z.object({
       bookedAtDateAndTime: z.string().refine((val) => dateRegex.test(val), {
-        message: "Invalid date format gaby",
+        message: "Invalid date format",
       }),
       // message: z
       //   .string()
