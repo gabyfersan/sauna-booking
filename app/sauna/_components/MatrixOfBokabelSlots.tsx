@@ -1,4 +1,5 @@
 import { saunaDateBaseSchema, saunaSchema } from "@/app/validationSchemas";
+import { EnvelopeOpenIcon } from "@radix-ui/react-icons";
 import { Button, Flex, Text } from "@radix-ui/themes";
 import { useRouter } from "next/navigation";
 import { z } from "zod";
@@ -13,14 +14,15 @@ const MatrixOfBokabelSlots = ({
   setDateAndTime,
   setShowDialog,
   saunaBooking,
+  session,
 }: {
   allHours: string[];
   setDateAndTime: (a: string) => void;
   setShowDialog: (a: boolean) => void;
   saunaBooking: SaunaDateBaseType[];
+  session: any;
 }) => {
   const router = useRouter();
-  console.log("MatrixOfBokabelSlots");
   const moveToClosetsHour = (time: string) => {
     const newTime = new Date(time.slice(0, -1));
     newTime.setHours(newTime.getHours() + 1);
@@ -101,12 +103,7 @@ const MatrixOfBokabelSlots = ({
               return i === 0 ? (
                 <div
                   key={allDays[day].dateFormated[0]}
-                  style={{
-                    // margin: "2px",
-                    backgroundColor: "#ffd8a8",
-                    //  opacity: 1,
-                    // zIndex: 2,
-                  }}
+                  style={{ backgroundColor: "#ffd8a8" }}
                   className={` flex items-center flex-col sticky top-0 m-1  z-[2]`}
                 >
                   <Text size='3' className='block'>
@@ -130,16 +127,25 @@ const MatrixOfBokabelSlots = ({
                   }
                   data-date-and-time={getDayAndTime(day, i)}
                   key={getDayAndTime(day, i)}
-                  style={
-                    {
-                      // margin: "2px 2px 2px 2px",
-                    }
-                  }
-                  className={` active:bg-lime-100 m-1`}
+                  className={` active:bg-lime-100 m-1 ${
+                    transformedSaunaBooking[getDayAndTime(day, i)] &&
+                    session.user.id ===
+                      transformedSaunaBooking[getDayAndTime(day, i)]
+                        .bookedByUserId
+                      ? "border-4 border-rose-950 border-solid"
+                      : ""
+                  }`}
                 >
                   <Text size='4'>
-                    {isTimeBooked(getDayAndTime(day, i)) ? "Bokad" : "Boka"}
-                    {/* {day === 0 &&
+                    {transformedSaunaBooking[getDayAndTime(day, i)] &&
+                    transformedSaunaBooking[getDayAndTime(day, i)].message ? (
+                      <EnvelopeOpenIcon />
+                    ) : (
+                      ""
+                    )}
+                    {/*
+                      {isTimeBooked(getDayAndTime(day, i)) ? "Bokad" : ""}
+                      {day === 0 &&
                     new Date().getTime() >
                       moveToClosetsHour(getDayAndTime(day, i))
                       ? "Disabled"

@@ -2,6 +2,7 @@
 import { Grid } from "@radix-ui/themes";
 import { useQuery, UseQueryResult } from "@tanstack/react-query";
 import axios from "axios";
+import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { Toaster } from "react-hot-toast";
 import { z } from "zod";
@@ -29,13 +30,14 @@ const Sauna = () => {
     refetch,
     isSuccess,
   } = useSaunaBooking();
+  const { data: session } = useSession();
   useEffect(() => {
+    console.log("repaint useeffetc");
     refetch();
     window.scrollTo({ top: 0 });
     const gridElement = document.getElementById("grid");
 
     if (gridElement && gridElement.style && gridElement.style.height) {
-      console.log("gridElement");
       gridElement.style.height =
         innerHeight - gridElement.getBoundingClientRect().top - 30 + "px";
     }
@@ -50,7 +52,6 @@ const Sauna = () => {
   const [dateAndTime, setDateAndTime] = useState<string>("");
 
   if (isLoading) {
-    console.log("LoadingSaunaPage");
     return <LoadingSaunaPage />;
   }
 
@@ -71,6 +72,7 @@ const Sauna = () => {
           setDateAndTime={setDateAndTime}
           setShowDialog={setShowDialog}
           saunaBooking={saunaBooking || []}
+          session={session}
         />
       </Grid>
     </>
