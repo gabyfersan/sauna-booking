@@ -100,6 +100,9 @@ const MatrixOfBokabelSlots = ({
         return (
           <Flex direction='column' key={day} onClick={bookSauna}>
             {Array.from(Array(25).keys()).map((i) => {
+              const shouldDisabledButton =
+                day === 0 &&
+                new Date().getTime() > moveToClosetsHour(getDayAndTime(day, i));
               return i === 0 ? (
                 <div
                   key={allDays[day].dateFormated[0]}
@@ -120,15 +123,11 @@ const MatrixOfBokabelSlots = ({
                   color={colorOfButton(getDayAndTime(day, i))}
                   variant='classic'
                   size='4'
-                  disabled={
-                    day === 0 &&
-                    new Date().getTime() >
-                      moveToClosetsHour(getDayAndTime(day, i))
-                  }
+                  disabled={shouldDisabledButton}
                   data-date-and-time={getDayAndTime(day, i)}
                   key={getDayAndTime(day, i)}
                   className={` active:bg-lime-100 m-1 ${
-                    transformedSaunaBooking[getDayAndTime(day, i)] &&
+                    !shouldDisabledButton && transformedSaunaBooking[getDayAndTime(day, i)] &&
                     session.user.id ===
                       transformedSaunaBooking[getDayAndTime(day, i)]
                         .bookedByUserId
@@ -137,7 +136,8 @@ const MatrixOfBokabelSlots = ({
                   }`}
                 >
                   <Text size='4'>
-                    {transformedSaunaBooking[getDayAndTime(day, i)] &&
+                    {!shouldDisabledButton &&
+                    transformedSaunaBooking[getDayAndTime(day, i)] &&
                     transformedSaunaBooking[getDayAndTime(day, i)].message ? (
                       <EnvelopeOpenIcon />
                     ) : (
