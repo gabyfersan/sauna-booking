@@ -1,4 +1,5 @@
 import { saunaDateBaseSchema, saunaSchema } from "@/app/validationSchemas";
+import { MouseEvent } from "react";
 import { z } from "zod";
 type SaunaDateBaseType = z.infer<typeof saunaDateBaseSchema>;
 
@@ -171,4 +172,17 @@ const getTransformedSaunaBooking = (saunaBookings: SaunaDateBaseType[]) => {
     },
     {}
   );
+};
+
+export const getDateAndTime = (event: MouseEvent<HTMLButtonElement>) => {
+  let dateAndTime;
+  let targetElement: HTMLElement = event.target as HTMLElement;
+  while (!dateAndTime) {
+    if (targetElement.dataset.dateAndTime) {
+      dateAndTime = targetElement.dataset.dateAndTime;
+    }
+    targetElement = targetElement.parentElement!;
+  }
+
+  return dateAndTime;
 };

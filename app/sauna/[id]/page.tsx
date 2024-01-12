@@ -22,7 +22,7 @@ interface Props {
   params: { id: string };
 }
 
-const SaunaDetailPage =  ({ params }: Props) => {
+const SaunaDetailPage = ({ params }: Props) => {
   const [showDialog, setShowDialog] = useState(false);
   const [saunaBooking, error, isLoading, refetch, isSuccess] =
     useQueryGetSaunaBooking(params.id);
@@ -35,7 +35,7 @@ const SaunaDetailPage =  ({ params }: Props) => {
     return <LoadingSaunaDetailPage />;
   }
   refetch();
-  // console.log("booke_sauna, session", saunaBooking, session);
+  //console.log("booke_sauna, session", saunaBooking, session);
   if (!saunaBooking) {
     notFound();
   }
@@ -50,14 +50,14 @@ const SaunaDetailPage =  ({ params }: Props) => {
             <SaunaDetails saunaBooking={saunaBooking} />
           </Box>
           {session?.user?.id === saunaBooking.bookedByUserId && (
-              <Box>
-                <Flex direction='column' gap='4'>
-                  {/* <AssigneeSelect issue={issue} /> */}
-                  <EditSaunaButton setShowDialog={setShowDialog} />
-                  <DeleteSaunaButton saunaId={saunaBooking.id} />
-                </Flex>
-              </Box>
-            )}
+            <Box>
+              <Flex direction='column' gap='4'>
+                {/* <AssigneeSelect issue={issue} /> */}
+                <EditSaunaButton setShowDialog={setShowDialog} />
+                <DeleteSaunaButton saunaId={saunaBooking.id} />
+              </Flex>
+            </Box>
+          )}
         </Grid>
       )}
       {showDialog && saunaBooking && (

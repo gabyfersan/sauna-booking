@@ -46,15 +46,15 @@ const Sauna = () => {
     element && element.scrollIntoView({ behavior: "smooth", block: "center" });
   }, [isSuccess]);
 
-  console.log("repaint");
+  console.log("repaint", session);
 
   const [showDialog, setShowDialog] = useState(false);
   const [dateAndTime, setDateAndTime] = useState<string>("");
 
-  if (isLoading) {
+  if (isLoading && !session) {
     return <LoadingSaunaPage />;
   }
-
+  //console.log("repaint 2", session);
   return (
     <>
       <Toaster />

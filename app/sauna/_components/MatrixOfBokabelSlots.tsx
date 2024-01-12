@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { z } from "zod";
 import {
   getAllDays,
+  getDateAndTime,
   getSaunaBookingInformationGetter,
 } from "./helperFunctions";
 const allDays = getAllDays(10);
@@ -59,10 +60,9 @@ const MatrixOfBokabelSlots = ({
     return allDays[day].dateNumerical + "T" + allHours[time] + ":00.000Z";
   };
 
-  const bookSauna = (e: any) => {
-    const dateAndTime =
-      e.target.dataset.dateAndTime ||
-      e.target.parentElement.dataset.dateAndTime;
+  const bookSauna = (event: any) => {
+    const dateAndTime = getDateAndTime(event);
+
     if (!dateAndTime) {
       return;
     }
@@ -80,7 +80,6 @@ const MatrixOfBokabelSlots = ({
         return (
           <Flex direction='column' key={day} onClick={bookSauna}>
             {Array.from(Array(25).keys()).map((i) => {
-
               const shouldDisabledButton =
                 day === 0 &&
                 new Date().getTime() > moveToClosetsHour(getDayAndTime(day, i));
