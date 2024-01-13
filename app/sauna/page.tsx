@@ -51,7 +51,7 @@ const Sauna = () => {
   const [showDialog, setShowDialog] = useState(false);
   const [dateAndTime, setDateAndTime] = useState<string>("");
 
-  if (isLoading && !session) {
+  if (isLoading || !session) {
     return <LoadingSaunaPage />;
   } else {
     console.log("", isLoading && !session);
