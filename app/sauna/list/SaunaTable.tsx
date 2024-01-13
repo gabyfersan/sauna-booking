@@ -40,9 +40,6 @@ const SaunaTable = ({ searchParams, saunaBookings }: Props) => {
       <Table.Body>
         {saunaBookings.map((saunaBooking) => {
           {
-            console.log(
-              saunaBooking.bookedAtDateAndTime.toISOString().slice(0, -1)
-            );
             const formatDate = getADateFormated(
               new Date(),
               new Date(

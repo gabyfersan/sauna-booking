@@ -54,12 +54,13 @@ const Sauna = () => {
   if (isLoading && !session) {
     return <LoadingSaunaPage />;
   } else {
-    console.log("",isLoading && !session);
+    console.log("", isLoading && !session);
     console.log(
       "else  isLoading && !session ",
       isLoading && !session,
       isLoading,
-      session
+      !session,
+      isSuccess
     );
   }
   console.log("repaint 2", session);
