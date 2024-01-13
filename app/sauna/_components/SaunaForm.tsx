@@ -77,7 +77,7 @@ const SaunaForm = ({
           });
           refetch && refetch();
           setShowDialog(false);
-          toast.success("Tiden är bokad bokad");
+          toast.success("Tiden är bokad");
         }
         // router.push("/issues/list");
         // router.refresh();

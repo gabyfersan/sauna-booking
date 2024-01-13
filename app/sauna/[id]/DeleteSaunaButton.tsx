@@ -5,6 +5,7 @@ import { AlertDialog, Button, Flex } from "@radix-ui/themes";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import toast from "react-hot-toast";
 
 const DeleteSaunaButton = ({ saunaId }: { saunaId: number }) => {
   const router = useRouter();
@@ -15,6 +16,7 @@ const DeleteSaunaButton = ({ saunaId }: { saunaId: number }) => {
       setisDeleting(true);
       await axios.delete(`/api/sauna-bookings/${saunaId}`);
       router.push("/sauna", { scroll: false });
+      toast.success("Tiden är avbokad");
       //router.refresh();
       setisDeleting(false);
     } catch (error) {
@@ -33,7 +35,7 @@ const DeleteSaunaButton = ({ saunaId }: { saunaId: number }) => {
         <AlertDialog.Content>
           <AlertDialog.Title>Confirm Deletion</AlertDialog.Title>
           <AlertDialog.Description>
-          Är du säker på att radera bokningen. Det går inte att ångra
+            Är du säker på att radera bokningen. Det går inte att ångra
           </AlertDialog.Description>
           <Flex mt='4' gap='3'>
             <AlertDialog.Cancel>
@@ -43,7 +45,7 @@ const DeleteSaunaButton = ({ saunaId }: { saunaId: number }) => {
             </AlertDialog.Cancel>
             <AlertDialog.Action>
               <Button color='red' onClick={deleteSaunaBooking}>
-               Radera bokning
+                Radera bokning
               </Button>
             </AlertDialog.Action>
           </Flex>
