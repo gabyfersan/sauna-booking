@@ -39,7 +39,11 @@ const MatrixOfBokabelSlots = ({
     // );
     return newTime.getTime();
   };
-
+  console.log(
+    "MatrixOfBokabelSlots saunaBookings , session",
+    saunaBookings,
+    session
+  );
   const transformedSaunaBooking =
     getSaunaBookingInformationGetter(saunaBookings);
   const isTimeBooked = (dateAndTime: string) => {

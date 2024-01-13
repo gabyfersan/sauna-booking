@@ -1,6 +1,7 @@
 import { saunaDateBaseSchema, saunaSchema } from "@/app/validationSchemas";
 import { MouseEvent } from "react";
 import { z } from "zod";
+import { DateFormated } from "./type";
 type SaunaDateBaseType = z.infer<typeof saunaDateBaseSchema>;
 
 const extendedSaunaSchema = saunaSchema.merge(z.object({ id: z.number() }));
@@ -34,18 +35,30 @@ const getDateNumerical = (date: Date): string =>
 export const getADateFormated = (
   startDate: Date,
   endDate: Date
-): {
-  dateFormated: string[];
-  dateNumerical: string;
-  dateAndTimeNumerical: string;
-  daysAndHours: { days: number; hours: number; minutes: number };
-} => {
+): DateFormated => {
   const dateFormated = getDateFormated(endDate).split(" ");
   const dateNumerical = getDateNumerical(endDate);
   const dateAndTimeNumerical = getDateAndTimeNumerical(endDate);
   const daysAndHours = getDaysAndHours(startDate, endDate);
+  const howManyDays =
+    parseInt(
+      new Intl.DateTimeFormat("sv-SE", {
+        day: "numeric",
+      }).format(endDate)
+    ) -
+    parseInt(
+      new Intl.DateTimeFormat("sv-SE", {
+        day: "numeric",
+      }).format(startDate)
+    );
 
-  return { dateFormated, dateNumerical, dateAndTimeNumerical, daysAndHours };
+  return {
+    dateFormated,
+    dateNumerical,
+    dateAndTimeNumerical,
+    daysAndHours,
+    howManyDays,
+  };
 };
 
 export const getAllDays = (numberOfDaysInTheFuture: number) => {
@@ -185,4 +198,32 @@ export const getDateAndTime = (event: MouseEvent<HTMLButtonElement>) => {
   }
 
   return dateAndTime;
+};
+
+
+export const dymanicDate = (dateFormated: DateFormated) => {
+  const daysAndHours = dateFormated.daysAndHours;
+  const daysLabel = ["I dag", "I morgon", "I övermorgon"];
+  const numberOfHours = daysAndHours.days * 24 + daysAndHours.hours;
+  let text =
+    daysAndHours.days === 0 && daysAndHours.hours === 0
+      ? " om " + daysAndHours.minutes + " minuter"
+      : daysLabel[dateFormated.howManyDays] +
+        " om dryga " +
+        numberOfHours +
+        (daysAndHours.hours === 1 ? " timme" : " timmar");
+
+  text =
+    daysAndHours.days < 0 ||
+    daysAndHours.hours < 0 ||
+    daysAndHours.minutes < 0
+      ? "Nu"
+      : text;
+
+  text =
+    dateFormated.howManyDays > 2
+      ? "Om " + dateFormated.howManyDays + " dagar"
+      : text;
+
+  return text;
 };

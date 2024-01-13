@@ -1,22 +1,32 @@
 import { saunaDateBaseSchema } from "@/app/validationSchemas";
-import { Sauna } from "@prisma/client";
 import { Card, Flex, Heading, Text } from "@radix-ui/themes";
 import ReactMarkdown from "react-markdown";
 import { z } from "zod";
+import { dymanicDate, getADateFormated } from "../_components/helperFunctions";
 type SaunaDateBaseType = z.infer<typeof saunaDateBaseSchema>;
 
-const SaunaDetails = ({ saunaBooking }: { saunaBooking: SaunaDateBaseType }) => {
+const SaunaDetails = ({
+  saunaBooking,
+}: {
+  saunaBooking: SaunaDateBaseType;
+}) => {
+  const dateFormated = getADateFormated(
+    new Date(),
+    new Date(saunaBooking.bookedAtDateAndTime.toString().slice(0, -1))
+  );
+
   return (
     <>
       <Heading>Bokad tid</Heading>
-      <Flex className='space-x-3' my='2'>
-        {/* <IssueStatusBadge status={booke_sauna.shareSauna} /> */}
+      <Flex className=' flex-col' my='3'>
+        <Text>
+          {dateFormated.dateAndTimeNumerical + ", " + dymanicDate(dateFormated)}{" "}
+        </Text>
         <Text>
           {saunaBooking.shareSauna
             ? "Vill dela bastun med någon annan"
             : "Vill inte dela bastun"}
         </Text>
-        <Text>{saunaBooking.bookedAtDateAndTime.toString()}</Text>
       </Flex>
       <Card className='prose max-w-full' mt='4'>
         <ReactMarkdown>{saunaBooking.message || ""}</ReactMarkdown>

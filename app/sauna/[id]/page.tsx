@@ -51,7 +51,6 @@ const SaunaDetailPage = ({ params }: Props) => {
           {session?.user?.id === saunaBooking.bookedByUserId && (
             <Box>
               <Flex direction='column' gap='4'>
-                {/* <AssigneeSelect issue={issue} /> */}
                 <EditSaunaButton setShowDialog={setShowDialog} />
                 <DeleteSaunaButton saunaId={saunaBooking.id} />
               </Flex>

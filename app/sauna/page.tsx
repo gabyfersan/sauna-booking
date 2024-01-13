@@ -53,8 +53,16 @@ const Sauna = () => {
 
   if (isLoading && !session) {
     return <LoadingSaunaPage />;
+  } else {
+    console.log("",isLoading && !session);
+    console.log(
+      "else  isLoading && !session ",
+      isLoading && !session,
+      isLoading,
+      session
+    );
   }
-  //console.log("repaint 2", session);
+  console.log("repaint 2", session);
   return (
     <>
       <Toaster />

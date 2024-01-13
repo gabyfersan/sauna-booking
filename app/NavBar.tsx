@@ -38,14 +38,18 @@ const NavBar = () => {
               <Link href='/'>
                 <AiFillBug />
               </Link>
-              {/* <NavLinks /> */}
               <DropdownLinks title='Felanmälan' links={issueLinks} />
               <DropdownLinks title='Bastu' links={saunaLinks} />
             </Flex>
           ) : (
-            <span />
+            <Flex align='center' gap='3'>
+              <Link href='/'>
+                <AiFillBug />
+              </Link>
+              <Skeleton width='5rem' />
+              <Skeleton width='3rem' />
+            </Flex>
           )}
-
           <AuthStatus />
         </Flex>
       </Container>
@@ -53,42 +57,13 @@ const NavBar = () => {
   );
 };
 
-// const NavLinks = () => {
-//   const currentPath = usePathname();
-
-//   const links = [{ label: "Dashboard", href: "/" }];
-
-//   return (
-//     <ul className='flex space-x-6'>
-//       {links.map((link) => (
-//         <li key={link.href}>
-//           <Link
-//             className={classnames({
-//               "nav-link": true,
-//               "!text-zinc-900": link.href === currentPath,
-//             })}
-//             href={link.href}
-//           >
-//             {link.label}
-//           </Link>
-//         </li>
-//       ))}
-//     </ul>
-//   );
-// };
-
 const AuthStatus = () => {
   const { status, data: session } = useSession();
   if (status === "loading") {
     return <Skeleton width='3rem' />;
   }
   if (status === "unauthenticated") {
-    return (
-      // <Link className='nav-link' href='/api/auth/signin'>
-      //   Login
-      // </Link>
-      <DropdownLinks title='Användare' links={userLinks} />
-    );
+    return <DropdownLinks title='Användare' links={userLinks} />;
   }
   return (
     <Box>
