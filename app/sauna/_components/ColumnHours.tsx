@@ -4,33 +4,16 @@ const ColumnHours = ({ allHours }: { allHours: string[] }) => {
     <Flex
       direction='column'
       className=' sticky left-0  bg-white'
-      style={{
-        zIndex: 10,
-      }}
+      style={{ zIndex: 10 }}
     >
       {allHours.map((a, i) =>
         i === 0 ? (
-          <div
-            key='jjj'
-            style={
-              {
-                // width: "4.5em",
-                // height: "3em",
-                // margin: "2px 2px 2px 0",
-              }
-            }
-            className={`w-20 h-12  my-1`}
-          ></div>
+          <div key='jjj' className={`w-20 h-12  my-1`}></div>
         ) : (
           <div
             key={a}
             style={{
-              //   width: "4.5em",
-              //   height: "3em",
-              //   margin: "2px 2px 2px 0",
-              //   borderRadius: "5px",
               backgroundColor: "#ffd8a8",
-              //   backgroundColor: "#80b08c",
               overflow: "clip",
               zIndex: 10,
             }}

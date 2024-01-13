@@ -70,6 +70,7 @@ const MatrixOfBokabelSlots = ({
       router.push(`/sauna/${transformedSaunaBooking(dateAndTime, "id")}`);
       return;
     }
+    console.log("Setstate in MatrixOfBokabelSlots");
     setDateAndTime(dateAndTime);
     setShowDialog(true);
   };
@@ -78,7 +79,12 @@ const MatrixOfBokabelSlots = ({
     <>
       {Array.from(Array(10).keys()).map((day: number) => {
         return (
-          <Flex direction='column' key={day} onClick={bookSauna}>
+          <Flex
+            direction='column'
+            key={day}
+            onClick={bookSauna}
+            className={`${day === 0 ? "ml-1" : ""}`}
+          >
             {Array.from(Array(25).keys()).map((i) => {
               const shouldDisabledButton =
                 day === 0 &&
@@ -87,7 +93,7 @@ const MatrixOfBokabelSlots = ({
                 <div
                   key={allDays[day].dateFormated[0]}
                   style={{ backgroundColor: "#ffd8a8" }}
-                  className={` flex items-center flex-col sticky top-0 m-1  z-[2]`}
+                  className={` flex items-center flex-col sticky top-0 m-1  z-[2] w-24`}
                 >
                   <Text size='3' className='block'>
                     {allDays[day].dateFormated[0]}

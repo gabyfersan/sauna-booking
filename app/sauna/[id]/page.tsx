@@ -3,8 +3,7 @@ import { saunaDateBaseSchema } from "@/app/validationSchemas";
 import { Box, Button, Flex, Grid } from "@radix-ui/themes";
 import { Session } from "next-auth";
 import { useSession } from "next-auth/react";
-import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, useRouter } from "next/navigation";
 import { useState } from "react";
 import { z } from "zod";
 import CreateAndUpdate from "../_components/CreateAndUpdate";
@@ -23,6 +22,7 @@ interface Props {
 }
 
 const SaunaDetailPage = ({ params }: Props) => {
+  const router = useRouter();
   const [showDialog, setShowDialog] = useState(false);
   const [saunaBooking, error, isLoading, refetch, isSuccess] =
     useQueryGetSaunaBooking(params.id);
@@ -41,9 +41,8 @@ const SaunaDetailPage = ({ params }: Props) => {
   }
   return (
     <>
-      <Button>
-        <Link href={`/sauna`}>Tillbaka</Link>
-      </Button>
+      <Button onClick={() => router.back()}>Tillbaka</Button>
+
       {saunaBooking && (
         <Grid columns={{ initial: "1", sm: "5" }} gap='5'>
           <Box className='md:col-span-4'>
