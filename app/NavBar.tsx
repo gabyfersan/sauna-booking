@@ -30,9 +30,9 @@ const userLinks = [
 const NavBar = () => {
   const { status, data: session } = useSession();
   return (
-    <nav className=' border-b mb-5 px-5 py-3'>
+    <nav className=' border-b mb-5 px-5 py-3 '>
       <Container>
-        <Flex justify='between' className='flex items-center'>
+        <Flex justify='between'  className=' items-center  h-8'>
           {status === "authenticated" ? (
             <Flex align='center' gap='3'>
               <Link href='/'>
@@ -42,14 +42,10 @@ const NavBar = () => {
               <DropdownLinks title='Bastu' links={saunaLinks} />
             </Flex>
           ) : (
-            <Flex align='center' gap='3'>
-              <Link href='/'>
-                <AiFillBug />
-              </Link>
-              <Skeleton width='5rem' />
-              <Skeleton width='3rem' />
-            </Flex>
+            ""
           )}
+          <SkeletonNavbar showSkeleton={status === "loading"} />
+
           <AuthStatus />
         </Flex>
       </Container>
@@ -120,6 +116,20 @@ const DropdownLinks = ({
         ))}
       </DropdownMenu.Content>
     </DropdownMenu.Root>
+  );
+};
+
+const SkeletonNavbar = ({ showSkeleton }: { showSkeleton: boolean }) => {
+  return showSkeleton ? (
+    <Flex align='center' gap='3' className='h-8'>
+      <Link href='/'>
+        <AiFillBug />
+      </Link>
+      <Skeleton width='6rem' className='ml-3 mr-2' />
+      <Skeleton width='3rem' />
+    </Flex>
+  ) : (
+    <span></span>
   );
 };
 
