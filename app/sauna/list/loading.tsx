@@ -1,7 +1,7 @@
 import { Skeleton } from "@/app/components";
 import { Table } from "@radix-ui/themes";
 
-const LoadingSaunaPage = () => {
+const LoadingSaunaListPage = () => {
   const saunaBookings = [1, 2, 3, 4, 5];
   return (
     <div>
@@ -46,4 +46,4 @@ const LoadingSaunaPage = () => {
   );
 };
 
-export default LoadingSaunaPage;
+export default LoadingSaunaListPage;

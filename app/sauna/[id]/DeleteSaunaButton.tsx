@@ -16,6 +16,7 @@ const DeleteSaunaButton = ({ saunaId }: { saunaId: number }) => {
       setisDeleting(true);
       await axios.delete(`/api/sauna-bookings/${saunaId}`);
       router.push("/sauna", { scroll: false });
+      //router.back();
       toast.success("Tiden är avbokad");
       //router.refresh();
       setisDeleting(false);

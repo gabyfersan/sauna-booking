@@ -7,8 +7,8 @@ import { Metadata } from "next";
 import { Session, getServerSession } from "next-auth";
 import { roundDownToNearestHour } from "../_components/helperFunctions";
 import SaunaTable, { SaunaQuery, columnName } from "./SaunaTable";
-import LoadingSaunaPage from "./loading";
-
+import LoadingSaunaListPage from "./loading";
+//export const revalidate = 0;
 interface CustomSession extends Omit<Session, "user"> {
   user?: Session["user"] & { id?: string };
 }
@@ -17,11 +17,9 @@ interface Props {
   searchParams: SaunaQuery;
 }
 const SaunaBookingsPage = async ({ searchParams }: Props) => {
-  // const status: Status | undefined = Status[searchParams.status]
-  //   ? searchParams.status
-  //   : undefined;
+  //revalidatePath("/sauna/list", "page");
+
   const session: CustomSession | null = await getServerSession(authOptions);
-  console.log("sessionlkjflkev", session);
   const orderBy: Prisma.SaunaOrderByWithRelationInput = columnName.includes(
     searchParams.orderBy
   )
@@ -29,7 +27,7 @@ const SaunaBookingsPage = async ({ searchParams }: Props) => {
     : { bookedAtDateAndTime: "asc" };
 
   const page = parseInt(searchParams.page) || 1;
-  const pageSize = 30;
+  const pageSize = 10;
   const time = new Intl.DateTimeFormat("sv-SE", {
     year: "numeric",
     month: "numeric",
@@ -37,6 +35,7 @@ const SaunaBookingsPage = async ({ searchParams }: Props) => {
     hour: "numeric",
     minute: "numeric",
   }).format(new Date());
+
   const saunaBookings =
     (await prisma.user
       .findUnique({
@@ -57,23 +56,14 @@ const SaunaBookingsPage = async ({ searchParams }: Props) => {
       })) || [];
 
   console.log("saunaBookings", saunaBookings);
-
-  // const saunaBookings = await prisma.sauna.findMany({
-
-  //   orderBy,
-  //   skip: (page - 1) * pageSize,
-  //   take: pageSize,
-
-  // });
   const saunaCount = await prisma.sauna.count({});
 
   return (
     <Flex direction='column' gap='3'>
-      {/* <IssueActions /> */}
       {saunaCount ? (
         <SaunaTable searchParams={searchParams} saunaBookings={saunaBookings} />
       ) : (
-        <LoadingSaunaPage />
+        <LoadingSaunaListPage />
       )}
       <Pagination
         pageSize={pageSize}
