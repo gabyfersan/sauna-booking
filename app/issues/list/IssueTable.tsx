@@ -49,7 +49,7 @@ const IssueTable = ({ searchParams, issues }: Props) => {
               <IssueStatusBadge status={issue.status} />
             </Table.Cell>
             <Table.Cell className='hidden md:table-cell'>
-              {issue.createdAt.toDateString()}
+              {issue.createdAt.toISOString().slice(0, -8).replace("T", " ")}
             </Table.Cell>
           </Table.Row>
         ))}
@@ -59,9 +59,9 @@ const IssueTable = ({ searchParams, issues }: Props) => {
 };
 
 const columns: { label: string; value: keyof Issue; className?: string }[] = [
-  { label: "Issue", value: "title" },
+  { label: "Ärende", value: "title" },
   { label: "Status", value: "status", className: "hidden md:table-cell" },
-  { label: "Created", value: "createdAt", className: "hidden md:table-cell" },
+  { label: "Skapad", value: "createdAt", className: "hidden md:table-cell" },
 ];
 export const columnName = columns.map((column) => column.value);
 export default IssueTable;

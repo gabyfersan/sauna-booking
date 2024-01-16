@@ -14,7 +14,7 @@ const LatestIssues = async () => {
   return (
     <Card>
       <Heading size='4' mb='5'>
-        Latest Issues
+        Senaste Ärenden
       </Heading>
       <Table.Root>
         <Table.Body>

@@ -21,7 +21,7 @@ const saunaLinks = [
 ];
 const issueLinks = [
   { label: "Registrera felanmälan", href: "/issues/new" },
-  { label: "All felanmälningar", href: "/issues/list" },
+  { label: "Alla felanmälningar", href: "/issues/list" },
 ];
 const userLinks = [
   { label: "Logga in", href: "/api/auth/signin" },

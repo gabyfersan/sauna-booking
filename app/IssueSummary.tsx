@@ -10,17 +10,17 @@ interface Props {
 const IssueSummary = ({ open, inProgress, closed }: Props) => {
   const containers: { label: string; value: number; status: Status }[] = [
     {
-      label: "Open Issues",
+      label: "Öppna Ärenden",
       value: open,
       status: "OPEN",
     },
     {
-      label: "In-progess Issues",
+      label: "Pågående Ärenden",
       value: inProgress,
       status: "IN_PROGRESS",
     },
     {
-      label: "Closed Issues",
+      label: "Stängda Ärenden",
       value: closed,
       status: "CLOSED",
     },

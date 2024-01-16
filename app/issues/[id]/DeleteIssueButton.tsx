@@ -27,24 +27,23 @@ const DeleteIssueButton = ({ issueId }: { issueId: number }) => {
       <AlertDialog.Root>
         <AlertDialog.Trigger>
           <Button color='red' disabled={isDeleting}>
-            Delete Issue {isDeleting && <Spinner />}
+            Radera felanmälan {isDeleting && <Spinner />}
           </Button>
         </AlertDialog.Trigger>
         <AlertDialog.Content>
           <AlertDialog.Title>Bekräfta avbokningen</AlertDialog.Title>
           <AlertDialog.Description>
-            Are you sure you want to delete this issue? This action cannot be
-            undone.
+          Är du säker på att du vill ta bort detta ärende? Denna åtgärd kan inte ångras
           </AlertDialog.Description>
           <Flex mt='4' gap='3'>
             <AlertDialog.Cancel>
               <Button variant='soft' color='gray'>
-                Cancel
+                Avbryt
               </Button>
             </AlertDialog.Cancel>
             <AlertDialog.Action>
               <Button color='red' onClick={deleteIssue}>
-                Delete Issue
+              Radera Ärende
               </Button>
             </AlertDialog.Action>
           </Flex>
@@ -54,7 +53,7 @@ const DeleteIssueButton = ({ issueId }: { issueId: number }) => {
         <AlertDialog.Content>
           <AlertDialog.Title>Error</AlertDialog.Title>
           <AlertDialog.Description>
-            This issue could not be deleted.
+          Det gick inte att ta bort detta ärende.
           </AlertDialog.Description>
           <Button
             color='gray'

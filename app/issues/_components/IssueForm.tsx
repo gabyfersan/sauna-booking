@@ -51,7 +51,7 @@ const IssueForm = ({ issue }: { issue?: Issue }) => {
         <TextField.Root>
           <TextField.Input
             defaultValue={issue?.title}
-            placeholder='Title'
+            placeholder='Rubrik'
             {...register("title")}
           />
         </TextField.Root>
@@ -61,12 +61,12 @@ const IssueForm = ({ issue }: { issue?: Issue }) => {
           control={control}
           defaultValue={issue?.description}
           render={({ field }) => (
-            <SimpleMDE placeholder='Description' {...field} />
+            <SimpleMDE placeholder='Beskrivning' {...field} />
           )}
         />
         <ErrorMessage>{errors.description?.message}</ErrorMessage>
         <Button disabled={isSubmitting}>
-          {issue ? "Update issue" : "Submit New Issue"}{" "}
+          {issue ? "Uppdatera felanmälan" : "Skapa ny felanmälan"}{" "}
           {isSubmitting && <Spinner />}
         </Button>
       </form>

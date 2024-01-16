@@ -4,10 +4,10 @@ import { Select } from "@radix-ui/themes";
 import { useRouter, useSearchParams } from "next/navigation";
 
 const statuses: { label: string; value?: Status }[] = [
-  { label: "All" },
-  { label: "Open", value: Status.OPEN },
-  { label: "In progress", value: Status.IN_PROGRESS },
-  { label: "Closed", value: Status.CLOSED },
+  { label: "Alla" },
+  { label: "Öppen", value: Status.OPEN },
+  { label: "Pågående", value: Status.IN_PROGRESS },
+  { label: "Stängd", value: Status.CLOSED },
 ];
 
 const IssueStatusFilter = () => {

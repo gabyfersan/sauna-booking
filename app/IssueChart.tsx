@@ -10,9 +10,9 @@ interface Props {
 
 const IssueChart = ({ open, inProgress, closed }: Props) => {
   const data = [
-    { label: "Open", value: open },
-    { label: "In Progress", value: inProgress },
-    { label: "Closed", value: closed },
+    { label: "Öppna", value: open },
+    { label: "Pågående", value: inProgress },
+    { label: "Stängda", value: closed },
   ];
   return (
     <Card>

@@ -20,7 +20,7 @@ const AssigneeSelect = ({ issue }: { issue: Issue }) => {
       .patch(`/api/issues/${issue.id}`, {
         assignedToUserId: userId || null,
       })
-      .catch(() => toast.error("Changes could not be saved."));
+      .catch(() => toast.error("Ändrigarna kunde inte sparas."));
   return (
     <>
       <Select.Root
