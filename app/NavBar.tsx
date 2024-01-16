@@ -1,6 +1,6 @@
 "use client";
 import { Skeleton } from "@/app/components";
-import { CaretDownIcon } from "@radix-ui/react-icons";
+import { CaretDownIcon, HamburgerMenuIcon } from "@radix-ui/react-icons";
 import {
   Avatar,
   Box,
@@ -32,7 +32,7 @@ const NavBar = () => {
   return (
     <nav className='border-b px-5 py-3 '>
       <Container>
-        <Flex justify='between'  className=' items-center  h-8'>
+        <Flex justify='between' className=' items-center  h-8'>
           {status === "authenticated" ? (
             <Flex align='center' gap='3'>
               <Link href='/'>
@@ -68,7 +68,7 @@ const AuthStatus = () => {
           <Text>
             <Avatar
               src={session!.user!.image!}
-              fallback='?'
+              fallback={<HamburgerMenuIcon />}
               size='2'
               radius='full'
               className='cursor-pointer'
@@ -81,7 +81,7 @@ const AuthStatus = () => {
             <Text size='2'>{session!.user!.email}</Text>
           </DropdownMenu.Label>
           <DropdownMenu.Item>
-            <Link href='/api/auth/signout'>Log out</Link>
+            <Link href='/api/auth/signout'>Logga ut</Link>
           </DropdownMenu.Item>
         </DropdownMenu.Content>
       </DropdownMenu.Root>

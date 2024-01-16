@@ -5,6 +5,10 @@ export const LegendSauna = () => {
   return (
     <Flex className='flex-col md:flex-row gap-x-5 mb-3'>
       <Flex className='items-center gap-x-3'>
+        <div className='rounded-full bg-lime-300 w-4 h-4'></div>
+        <Text>Ej bokad</Text>
+      </Flex>
+      <Flex className='items-center gap-x-3'>
         <div className='rounded-full bg-yellow-300 w-4 h-4'></div>
         <Text>Bokad, gäster accepteras</Text>
       </Flex>
