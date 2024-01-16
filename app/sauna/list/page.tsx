@@ -9,6 +9,7 @@ import { roundDownToNearestHour } from "../_components/helperFunctions";
 import SaunaTable, { SaunaQuery, columnName } from "./SaunaTable";
 import LoadingSaunaListPage from "./loading";
 //export const revalidate = 0;
+// export const dynamic = "force-dynamic";
 interface CustomSession extends Omit<Session, "user"> {
   user?: Session["user"] & { id?: string };
 }
@@ -18,7 +19,6 @@ interface Props {
 }
 const SaunaBookingsPage = async ({ searchParams }: Props) => {
   //revalidatePath("/sauna/list", "page");
-
   const session: CustomSession | null = await getServerSession(authOptions);
   const orderBy: Prisma.SaunaOrderByWithRelationInput = columnName.includes(
     searchParams.orderBy
@@ -56,11 +56,11 @@ const SaunaBookingsPage = async ({ searchParams }: Props) => {
       })) || [];
 
   console.log("saunaBookings", saunaBookings);
-  const saunaCount = await prisma.sauna.count({});
+  const saunaCount = saunaBookings.length;
 
   return (
     <Flex direction='column' gap='3'>
-      {saunaCount ? (
+      {saunaBookings ? (
         <SaunaTable searchParams={searchParams} saunaBookings={saunaBookings} />
       ) : (
         <LoadingSaunaListPage />
@@ -79,5 +79,4 @@ export const metadata: Metadata = {
   description: "Se alla bokade tider",
 };
 
-export const dynamic = "force-dynamic";
 export default SaunaBookingsPage;

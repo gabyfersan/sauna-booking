@@ -1,5 +1,4 @@
 "use client";
-
 import { Spinner } from "@/app/components";
 import { AlertDialog, Button, Flex } from "@radix-ui/themes";
 import axios from "axios";
@@ -14,11 +13,16 @@ const DeleteSaunaButton = ({ saunaId }: { saunaId: number }) => {
   const deleteSaunaBooking = async () => {
     try {
       setisDeleting(true);
-      await axios.delete(`/api/sauna-bookings/${saunaId}`);
-      router.push("/sauna", { scroll: false });
-      //router.back();
+      await axios.delete(`/api/sauna-bookings/${saunaId}}`);
+      // router.push(`/sauna/list`, {
+      //   scroll: false,
+      // });
+      // router.push(`/sauna/list?timestamp=${Date.now()}`, {
+      //   scroll: false,
+      // });
+      router.back();
       toast.success("Tiden är avbokad");
-      //router.refresh();
+      router.refresh();
       setisDeleting(false);
     } catch (error) {
       setError(true);
@@ -34,7 +38,7 @@ const DeleteSaunaButton = ({ saunaId }: { saunaId: number }) => {
           </Button>
         </AlertDialog.Trigger>
         <AlertDialog.Content>
-          <AlertDialog.Title>Confirm Deletion</AlertDialog.Title>
+          <AlertDialog.Title>Bekräfta avbokningen</AlertDialog.Title>
           <AlertDialog.Description>
             Är du säker på att radera bokningen. Det går inte att ångra
           </AlertDialog.Description>
