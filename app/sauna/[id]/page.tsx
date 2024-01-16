@@ -1,6 +1,7 @@
 "use client";
 import { saunaDateBaseSchema } from "@/app/validationSchemas";
-import { Box, Button, Flex, Grid } from "@radix-ui/themes";
+import { ArrowLeftIcon } from "@radix-ui/react-icons";
+import { Box, Flex, Grid, Link } from "@radix-ui/themes";
 import { Session } from "next-auth";
 import { useSession } from "next-auth/react";
 import { notFound, useRouter } from "next/navigation";
@@ -41,7 +42,12 @@ const SaunaDetailPage = ({ params }: Props) => {
   }
   return (
     <>
-      <Button onClick={() => router.back()}>Tillbaka</Button>
+      <Link
+        onClick={() => router.back()}
+        className='flex items-center space-x-2'
+      >
+        <ArrowLeftIcon /> Tillbaka
+      </Link>
 
       {saunaBooking && (
         <Grid columns={{ initial: "1", sm: "5" }} gap='5'>
