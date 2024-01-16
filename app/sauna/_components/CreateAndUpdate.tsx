@@ -1,10 +1,9 @@
 "use client";
-import { Sauna } from "@prisma/client";
+import { saunaDateBaseSchema } from "@/app/validationSchemas";
 import { AlertDialog, Button } from "@radix-ui/themes";
 import dynamic from "next/dynamic";
-import SaunaFormSkeleton from "./SaunaFormSkeleton";
-import { saunaDateBaseSchema } from "@/app/validationSchemas";
 import { z } from "zod";
+import SaunaFormSkeleton from "./SaunaFormSkeleton";
 type SaunaDateBaseType = z.infer<typeof saunaDateBaseSchema>;
 //import SaunaForm from "./SaunaForm";
 
@@ -27,11 +26,15 @@ const createAndUpdate = ({
   return (
     <AlertDialog.Root open={true}>
       <AlertDialog.Content>
-        <AlertDialog.Title>Boka tid</AlertDialog.Title>
+        <AlertDialog.Title>{`${
+          booking ? "Ändra bokning" : "Boka tiden"
+        }`}</AlertDialog.Title>
         <AlertDialog.Description>
-          {dateAndTime
-            ? `Boka tiden ${dateAndTime.slice(0, -8).replace("T", "  ")}`
-            : "Ändra"}
+          {`${
+            booking
+              ? booking.bookedAtDateAndTime.slice(0, -8).replace("T", "  ")
+              : dateAndTime!.slice(0, -8).replace("T", "  ")
+          }`}
         </AlertDialog.Description>
         <SaunaForm
           booking={booking}
@@ -44,6 +47,7 @@ const createAndUpdate = ({
           variant='soft'
           mt='2'
           onClick={() => setShowDialog(false)}
+          className='relative bottom-9'
         >
           Stäng
         </Button>

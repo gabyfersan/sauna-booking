@@ -3,7 +3,7 @@ import ErrorMessage from "@/app/components/ErrorMessage";
 import Spinner from "@/app/components/Spinner";
 import { patchSaunaSchema, saunaDateBaseSchema } from "@/app/validationSchemas";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button, Callout, Checkbox, Link } from "@radix-ui/themes";
+import { Button, Callout, Checkbox, Flex, Link } from "@radix-ui/themes";
 import axios from "axios";
 import "easymde/dist/easymde.min.css";
 import { Session } from "next-auth";
@@ -98,7 +98,7 @@ const SaunaForm = ({
       )}
 
       <form className='space-y-3' onSubmit={onSubmit}>
-        <label>
+        <label className="flex gap-x-3 items-center">
           <Controller
             name='shareSauna'
             control={control}
@@ -153,10 +153,12 @@ const SaunaForm = ({
           {...register("message")}
         /> */}
         <ErrorMessage>{errors.message?.message}</ErrorMessage>
-        <Button disabled={isSubmitting} type='submit'>
-          {booking ? "Uppdatera bokningen" : "Boka"}
-          {isSubmitting && <Spinner />}
-        </Button>
+        <Flex className='flex justify-end'>
+          <Button disabled={isSubmitting} type='submit'>
+            {booking ? "Uppdatera bokningen" : "Boka"}
+            {isSubmitting && <Spinner />}
+          </Button>
+        </Flex>
       </form>
     </div>
   );
