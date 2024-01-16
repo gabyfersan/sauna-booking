@@ -30,7 +30,7 @@ const userLinks = [
 const NavBar = () => {
   const { status, data: session } = useSession();
   return (
-    <nav className=' border-b mb-5 px-5 py-3 '>
+    <nav className='border-b px-5 py-3 '>
       <Container>
         <Flex justify='between'  className=' items-center  h-8'>
           {status === "authenticated" ? (

@@ -1,6 +1,6 @@
 "use client";
 import { Grid } from "@radix-ui/themes";
-import { useQuery, UseQueryResult } from "@tanstack/react-query";
+import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
@@ -9,8 +9,9 @@ import { z } from "zod";
 import { saunaDateBaseSchema } from "../validationSchemas";
 import ColumnHours from "./_components/ColumnHours";
 import CreateAndUpdate from "./_components/CreateAndUpdate";
-import { getAllHours } from "./_components/helperFunctions";
+import { LegendSauna } from "./_components/Legend";
 import MatrixOfBokabelSlots from "./_components/MatrixOfBokabelSlots";
+import { getAllHours } from "./_components/helperFunctions";
 import LoadingSaunaPage from "./loading";
 type SaunaDateBaseType = z.infer<typeof saunaDateBaseSchema>;
 const allHours = getAllHours();
@@ -74,6 +75,7 @@ const Sauna = () => {
           setShowDialog={setShowDialog}
         />
       )}
+      <LegendSauna />
       <Grid style={styleForGrid} id='grid'>
         <ColumnHours allHours={allHours} />
         <MatrixOfBokabelSlots
