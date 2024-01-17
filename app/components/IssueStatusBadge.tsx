@@ -6,7 +6,7 @@ const statusMap: Record<
   Status,
   { label: string; color: "red" | "green" | "violet" }
 > = {
-  OPEN: { label: "Öppna", color: "red" },
+  OPEN: { label: "Öppen", color: "red" },
   IN_PROGRESS: { label: "Pågående", color: "violet" },
   CLOSED: { label: "Stängda", color: "green" },
 };
