@@ -60,7 +60,7 @@ const IssueForm = ({ user }: { user?: User }) => {
           <ErrorMessage>{errors.email?.message}</ErrorMessage>
           <Text size='3'>Lösenord</Text>
           <TextField.Root>
-            <TextField.Input placeholder='Lösenord' {...register("password")} />
+            <TextField.Input placeholder='Lösenord' {...register("password")} type="password"/>
           </TextField.Root>
           <ErrorMessage>{errors.password?.message}</ErrorMessage>
           <Button disabled={isSubmitting}>

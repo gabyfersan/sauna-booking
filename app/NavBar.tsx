@@ -23,10 +23,10 @@ const issueLinks = [
   { label: "Registrera felanmälan", href: "/issues/new" },
   { label: "Alla felanmälningar", href: "/issues/list" },
 ];
-const userLinks = [
-  { label: "Logga in", href: "/api/auth/signin" },
-  { label: "Registrera ny användare", href: "/users/register" },
-];
+// const userLinks = [
+//   { label: "Logga in", href: "/api/auth/signin" },
+//   { label: "Registrera ny användare", href: "/users/register" },
+// ];
 const NavBar = () => {
   const { status, data: session } = useSession();
   return (
@@ -55,19 +55,20 @@ const NavBar = () => {
 
 const AuthStatus = () => {
   const { status, data: session } = useSession();
+  const router = useRouter();
   if (status === "loading") {
     return <Skeleton width='3rem' />;
   }
-  if (status === "unauthenticated") {
-    return <DropdownLinks title='Användare' links={userLinks} />;
-  }
+  // if (status === "unauthenticated") {
+  //   return <DropdownLinks title='Användare' links={userLinks} />;
+  // }
   return (
     <Box>
       <DropdownMenu.Root>
         <DropdownMenu.Trigger>
           <Text>
             <Avatar
-              src={session!.user!.image!}
+              src={session?.user ? session!.user!.image! : undefined}
               fallback={<HamburgerMenuIcon />}
               size='2'
               radius='full'
@@ -77,12 +78,29 @@ const AuthStatus = () => {
           </Text>
         </DropdownMenu.Trigger>
         <DropdownMenu.Content>
-          <DropdownMenu.Label>
-            <Text size='2'>{session!.user!.email}</Text>
-          </DropdownMenu.Label>
-          <DropdownMenu.Item>
-            <Link href='/api/auth/signout'>Logga ut</Link>
-          </DropdownMenu.Item>
+          {status === "unauthenticated" ? (
+            <>
+              <DropdownMenu.Item
+                onSelect={() => router.push("/api/auth/signin")}
+              >
+                Logga in
+              </DropdownMenu.Item>
+              <DropdownMenu.Item
+                onSelect={() => router.push("/users/register")}
+              >
+                Registrera ny användare
+              </DropdownMenu.Item>
+            </>
+          ) : (
+            <>
+              <DropdownMenu.Label>
+                <Text size='2'>{session!.user!.email}</Text>
+              </DropdownMenu.Label>
+              <DropdownMenu.Item>
+                <Link href='/api/auth/signout'>Logga ut</Link>
+              </DropdownMenu.Item>
+            </>
+          )}
         </DropdownMenu.Content>
       </DropdownMenu.Root>
     </Box>
