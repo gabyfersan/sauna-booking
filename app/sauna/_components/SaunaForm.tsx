@@ -80,7 +80,7 @@ const SaunaForm = ({
           toast.success("Tiden är bokad");
         }
         // router.push("/issues/list");
-        // router.refresh();
+        router.refresh();
       } catch (error) {
         setError("An unexpected error occurred.");
       }
@@ -98,7 +98,7 @@ const SaunaForm = ({
       )}
 
       <form className='space-y-3' onSubmit={onSubmit}>
-        <label className="flex gap-x-3 items-center">
+        <label className='flex gap-x-3 items-center'>
           <Controller
             name='shareSauna'
             control={control}
