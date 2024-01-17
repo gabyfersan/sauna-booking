@@ -5,6 +5,11 @@ import { getServerSession } from "next-auth";
 import IssueChart from "./IssueChart";
 import IssueSummary from "./IssueSummary";
 import LatestIssues from "./LatestIssues";
+import { default as newDynamic } from "next/dynamic";
+
+const Nbs = newDynamic(() => import("@/app/components/Nbs"), {
+  ssr: false,
+});
 
 export const dynamic = "force-dynamic";
 
@@ -17,11 +22,7 @@ export default async function Home() {
   const closed = await prisma.issue.count({ where: { status: "CLOSED" } });
 
   if (!session) {
-    return (
-      <Flex className='justify-center'>
-        <img src='/nbs.jpeg' />
-      </Flex>
-    );
+    return <Nbs />;
   }
 
   return (
