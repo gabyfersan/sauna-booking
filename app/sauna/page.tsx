@@ -4,7 +4,6 @@ import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
-import { Toaster } from "react-hot-toast";
 import { z } from "zod";
 import { saunaDateBaseSchema } from "../validationSchemas";
 import ColumnHours from "./_components/ColumnHours";
@@ -67,7 +66,6 @@ const Sauna = () => {
   console.log("repaint 2", session);
   return (
     <>
-      <Toaster />
       {showDialog && (
         <CreateAndUpdate
           dateAndTime={dateAndTime}

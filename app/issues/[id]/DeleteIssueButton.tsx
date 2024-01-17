@@ -5,6 +5,7 @@ import { AlertDialog, Button, Flex } from "@radix-ui/themes";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import toast from "react-hot-toast";
 
 const DeleteIssueButton = ({ issueId }: { issueId: number }) => {
   const router = useRouter();
@@ -14,6 +15,7 @@ const DeleteIssueButton = ({ issueId }: { issueId: number }) => {
     try {
       setisDeleting(true);
       await axios.delete(`/api/issues/${issueId}`);
+      toast.success("Ärendet är raderat");
       router.push("/issues/list");
       router.refresh();
       setisDeleting(false);
@@ -27,13 +29,14 @@ const DeleteIssueButton = ({ issueId }: { issueId: number }) => {
       <AlertDialog.Root>
         <AlertDialog.Trigger>
           <Button color='red' disabled={isDeleting}>
-            Radera felanmälan {isDeleting && <Spinner />}
+            Radera Ärende {isDeleting && <Spinner />}
           </Button>
         </AlertDialog.Trigger>
         <AlertDialog.Content>
           <AlertDialog.Title>Bekräfta avbokningen</AlertDialog.Title>
           <AlertDialog.Description>
-          Är du säker på att du vill ta bort detta ärende? Denna åtgärd kan inte ångras
+            Är du säker på att du vill ta bort detta ärende? Denna åtgärd kan
+            inte ångras
           </AlertDialog.Description>
           <Flex mt='4' gap='3'>
             <AlertDialog.Cancel>
@@ -43,7 +46,7 @@ const DeleteIssueButton = ({ issueId }: { issueId: number }) => {
             </AlertDialog.Cancel>
             <AlertDialog.Action>
               <Button color='red' onClick={deleteIssue}>
-              Radera Ärende
+                Radera Ärende
               </Button>
             </AlertDialog.Action>
           </Flex>
@@ -53,7 +56,7 @@ const DeleteIssueButton = ({ issueId }: { issueId: number }) => {
         <AlertDialog.Content>
           <AlertDialog.Title>Error</AlertDialog.Title>
           <AlertDialog.Description>
-          Det gick inte att ta bort detta ärende.
+            Det gick inte att ta bort detta ärende.
           </AlertDialog.Description>
           <Button
             color='gray'

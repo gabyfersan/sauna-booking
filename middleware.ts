@@ -9,6 +9,5 @@ export const config = {
     "/sauna",
     "/sauna/:id+",
     "/sauna/list",
-    "/users/register",
   ],
 };
